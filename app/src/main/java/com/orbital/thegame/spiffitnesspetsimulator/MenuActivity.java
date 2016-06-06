@@ -2,6 +2,7 @@ package com.orbital.thegame.spiffitnesspetsimulator;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.TextView;
 
 public class MenuActivity extends AppCompatActivity {
 
@@ -9,5 +10,8 @@ public class MenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+
+        TextView expCount = (TextView) findViewById(R.id.maxExp);
+        expCount.setText(""+ MainActivity.stepCount);
     }
 }
