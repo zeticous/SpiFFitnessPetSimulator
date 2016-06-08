@@ -31,11 +31,12 @@ public class GoogleFitSync extends IntentService {
     private GoogleApiClient mGoogleApiFitnessClient;
     private boolean mTryingToConnect = false;
 
-    public static final boolean TYPE_TRUE = true;
-    public static final boolean TYPE_FALSE = false;
+    public static final String SERVICE_REQUEST_TYPE = "requestType";
+    public static final int TYPE_GET_STEP_DATA = 1;
+    public static final int TYPE_REQUEST_CONNECTION = 2;
 
-    public static final String TYPE_GET_STEP_DATA = "getStepData";
-    public static final String TYPE_REQUEST_CONNECTION = "requestConnection";
+    public static final String GET_STEP_DATA = "getStepData";
+    public static final String REQUEST_CONNECTION = "requestConnection";
 
     public static final String STEP_COUNT = "stepCount";
     public static final String FIT_NOTIFY_INTENT = "fitStatusUpdateIntent";
@@ -96,31 +97,32 @@ public class GoogleFitSync extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent){
-        boolean connectionStatusRequest = intent.getBooleanExtra(TYPE_REQUEST_CONNECTION, false);
-        boolean stepDataRequest = intent.getBooleanExtra(TYPE_GET_STEP_DATA, false);
-        if (connectionStatusRequest){
-            if (!mGoogleApiFitnessClient.isConnected()){
-                mTryingToConnect=true;
-                Log.d(TAG, "Trying to connect to Google Fit");
-                mGoogleApiFitnessClient.connect();
-                while (mTryingToConnect){
-                    try {
-                        Thread.sleep(100,0);
-                    } catch (InterruptedException e){
-                        e.printStackTrace();
-                    }
+        int type = intent.getIntExtra(SERVICE_REQUEST_TYPE, -1);
+
+        if (!mGoogleApiFitnessClient.isConnected()){
+            mTryingToConnect=true;
+            Log.d(TAG, "Trying to connect to Google Fit");
+            mGoogleApiFitnessClient.connect();
+
+            while (mTryingToConnect){
+                try {
+                    Thread.sleep(100,0);
+                } catch (InterruptedException e){
+                    e.printStackTrace();
                 }
             }
-            else
-                Log.d(TAG, "Already Connected");
         }
-        if (stepDataRequest){
-            if(mGoogleApiFitnessClient.isConnected()){
+
+        if (mGoogleApiFitnessClient.isConnected()){
+            if(type == TYPE_GET_STEP_DATA){
                 Log.d(TAG,"Requesting step count from Google Fit");
                 getSteps();
             }
-            else
-                Log.e(TAG, "Fit not connected");
+            else if(type == TYPE_REQUEST_CONNECTION){
+
+            }
+        }else {
+            Log.d(TAG, "Fit wasn't able to connect, so the request failed");
         }
     }
 
@@ -184,7 +186,7 @@ public class GoogleFitSync extends IntentService {
     }
 
     private void sendSteps(int stepCount){
-        Intent intent = new Intent(FIT_NOTIFY_INTENT);
+        Intent intent = new Intent(STEP_COUNT);
         intent.putExtra(STEP_COUNT, stepCount);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }

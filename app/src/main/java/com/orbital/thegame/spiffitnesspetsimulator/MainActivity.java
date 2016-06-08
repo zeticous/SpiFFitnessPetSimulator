@@ -70,20 +70,23 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter((GoogleFitSync.FIT_NOTIFY_INTENT)));
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(GoogleFitSync.STEP_COUNT));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mFitConnectionReceiver, new IntentFilter((GoogleFitSync.FIT_NOTIFY_INTENT)));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mStepCountReceiver, new IntentFilter(GoogleFitSync.STEP_COUNT));
 
-        requestGoogleFitSync();
+        requestStepCount();
+        requestConnection();
     }
-    private void requestGoogleFitSync(){
-        Log.e(TAG,"Executing requestFitConnection...");
+    private void requestConnection(){
         Intent service = new Intent(this, GoogleFitSync.class);
-        service.putExtra(GoogleFitSync.TYPE_REQUEST_CONNECTION, GoogleFitSync.TYPE_TRUE);
-        service.putExtra(GoogleFitSync.TYPE_GET_STEP_DATA, GoogleFitSync.TYPE_TRUE);
+        service.putExtra(GoogleFitSync.SERVICE_REQUEST_TYPE, GoogleFitSync.TYPE_REQUEST_CONNECTION);
         startService(service);
     }
-
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private void requestStepCount(){
+        Intent service = new Intent(this, GoogleFitSync.class);
+        service.putExtra(GoogleFitSync.SERVICE_REQUEST_TYPE, GoogleFitSync.TYPE_GET_STEP_DATA);
+        startService(service);
+    }
+    private BroadcastReceiver mFitConnectionReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "Executing Connection onReceive");
@@ -99,12 +102,14 @@ public class MainActivity extends AppCompatActivity{
                 Log.d(TAG, "Fit connection successful - closing connect screen if it's open.");
                 fitHandleConnection();
             }
+        }
+    };
+    private BroadcastReceiver mStepCountReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
             if(intent.hasExtra(GoogleFitSync.STEP_COUNT)){
                 stepCount = intent.getIntExtra(GoogleFitSync.STEP_COUNT, 0);
                 Log.e(TAG, "Broadcasted Value: " + stepCount);
-            }
-            else if (!intent.hasExtra(GoogleFitSync.STEP_COUNT)){
-                Log.e(TAG, "POOP");
             }
         }
     };
@@ -195,6 +200,4 @@ public class MainActivity extends AppCompatActivity{
     private void changeText(TextView view, String string){
         view.setText(string);
     }
-
-
 }
