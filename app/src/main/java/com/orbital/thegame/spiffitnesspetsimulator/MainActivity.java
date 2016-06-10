@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -18,12 +19,17 @@ import android.widget.TextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.fitness.FitnessStatusCodes;
 
+import java.util.Calendar;
+import java.util.Date;
+
 
 public class MainActivity extends AppCompatActivity{
 
     public static int stepCount = 0;
     public static int affinityPoint = 5;
     public static int affinityLevel = 0;
+
+    public static Spirits UserSpirit;
 
     public final static String TAG = "GoogleFitService";
     private boolean authInProgress = false;
@@ -38,10 +44,19 @@ public class MainActivity extends AppCompatActivity{
 
         updateAffinityImage(affinityPoint);
 
+        SharedPreferences settings = getSharedPreferences("GameSettings", 0);
+        if (settings.getBoolean("firstLaunch",true)){
+            Log.d("Settings", "First Launch Detected");
+            Spirits.initialise();
+            settings.edit().putBoolean("firstLaunch",false).apply();
+        }
+
         ImageButton sprite = (ImageButton) findViewById(R.id.sprite);
         ImageButton menu = (ImageButton) findViewById(R.id.menu);
         ImageButton help = (ImageButton) findViewById(R.id.help);
         ImageButton record = (ImageButton) findViewById(R.id.record);
+
+        changeImage(sprite, UserSpirit.image_idle1);
 
         final TextView levelCount = (TextView) findViewById(R.id.level_count);
 
@@ -75,6 +90,7 @@ public class MainActivity extends AppCompatActivity{
 
         requestGoogleFitSync();
     }
+
     private void requestGoogleFitSync(){
         Log.e(TAG,"Executing requestFitConnection...");
         Intent service = new Intent(this, GoogleFitSync.class);

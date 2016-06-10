@@ -32,7 +32,6 @@ public class GoogleFitSync extends IntentService {
     private boolean mTryingToConnect = false;
 
     public static final boolean TYPE_TRUE = true;
-    public static final boolean TYPE_FALSE = false;
 
     public static final String TYPE_GET_STEP_DATA = "getStepData";
     public static final String TYPE_REQUEST_CONNECTION = "requestConnection";
