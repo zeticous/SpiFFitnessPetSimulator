@@ -16,6 +16,7 @@ import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.data.Bucket;
 import com.google.android.gms.fitness.data.DataPoint;
 import com.google.android.gms.fitness.data.DataSet;
+import com.google.android.gms.fitness.data.DataSource;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.request.DataReadRequest;
@@ -43,6 +44,9 @@ public class GoogleFitSync extends IntentService {
     public static final String FIT_EXTRA_CONNECTION_MESSAGE = "fitFirstConnection";
     public static final String FIT_EXTRA_NOTIFY_FAILED_STATUS_CODE = "fitExtraFailedStatusCode";
     public static final String FIT_EXTRA_NOTIFY_FAILED_INTENT = "fitExtraFailedIntent";
+
+    public static int numOfSteps;
+
 
     @Override
     public void onCreate(){
@@ -134,8 +138,15 @@ public class GoogleFitSync extends IntentService {
         cal.add(Calendar.DAY_OF_YEAR, -3);
         long startTime = cal.getTimeInMillis();
 
+        DataSource ESTIMATED_STEP_DELTAS = new DataSource.Builder()
+                .setDataType(DataType.TYPE_STEP_COUNT_DELTA)
+                .setType(DataSource.TYPE_DERIVED)
+                .setStreamName("estimated_steps")
+                .setAppPackageName("com.google.android.gms")
+                .build();
+
         DataReadRequest readRequest = new DataReadRequest.Builder()
-                .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
+                .aggregate(ESTIMATED_STEP_DELTAS, DataType.AGGREGATE_STEP_COUNT_DELTA)
                 .bucketByTime(3, TimeUnit.DAYS)
                 .setTimeRange(startTime,endTime,TimeUnit.MILLISECONDS)
                 .build();
@@ -167,8 +178,9 @@ public class GoogleFitSync extends IntentService {
                 steps += dp.getValue(field).asInt();
             }
         }
-        Log.e(TAG, "Value: "+steps);
-        sendSteps(steps);
+        numOfSteps += steps;
+        Log.e(TAG, "Value: " + numOfSteps);
+        sendSteps(numOfSteps);
         Log.d(TAG, "Retrieval Successful, terminating Google Fit");
     }
 
