@@ -139,7 +139,7 @@ public class GoogleFitSync extends IntentService {
 
         DataReadResult dataResult = Fitness
                 .HistoryApi.readData(mGoogleApiFitnessClient,readRequest)
-                .await(30,TimeUnit.SECONDS);
+                .await(1,TimeUnit.MINUTES);
 
         if(dataResult.getBuckets().size()>0){
             for (Bucket bucket : dataResult.getBuckets()){

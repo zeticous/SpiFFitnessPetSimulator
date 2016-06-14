@@ -1,5 +1,6 @@
 package com.orbital.thegame.spiffitnesspetsimulator;
 
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -19,17 +20,16 @@ import android.widget.TextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.fitness.FitnessStatusCodes;
 
-import java.util.Calendar;
-import java.util.Date;
-
 
 public class MainActivity extends AppCompatActivity{
 
-    public static int stepCount = 0;
-    public static int affinityPoint = 5;
-    public static int affinityLevel = 0;
-
     public static Spirits UserSpirit;
+
+    public static int stepCount;
+    private static int affinityLevel = UserSpirit.getAffinityLevel();
+    private static final int FACTOR = 1000;
+
+    private JSONSerializer mSerializer = new JSONSerializer("Spirits.json", MainActivity.this.getApplicationContext());
 
     public final static String TAG = "GoogleFitService";
     private boolean authInProgress = false;
@@ -37,18 +37,28 @@ public class MainActivity extends AppCompatActivity{
     private ConnectionResult mFitResultResolution;
     private static final String AUTH_PENDING = "auth_state_pending";
 
+    private AlarmManager alarmManager;
+    private PendingIntent pendingIntent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        updateAffinityImage(affinityPoint);
-
         SharedPreferences settings = getSharedPreferences("GameSettings", 0);
         if (settings.getBoolean("firstLaunch",true)){
             Log.d("Settings", "First Launch Detected");
-            Spirits.initialise();
+            UserSpirit = new Egg();
+
             settings.edit().putBoolean("firstLaunch",false).apply();
+        }
+        else{
+            try{
+                UserSpirit = mSerializer.load();
+                Log.e("JSON", "Successfully load");
+            }catch(Exception e){
+                Log.e("ERROR", "ERROR LOADING SPIRITS");
+            }
         }
 
         ImageButton sprite = (ImageButton) findViewById(R.id.sprite);
@@ -56,17 +66,16 @@ public class MainActivity extends AppCompatActivity{
         ImageButton help = (ImageButton) findViewById(R.id.help);
         ImageButton record = (ImageButton) findViewById(R.id.record);
 
-        changeImage(sprite, UserSpirit.image_idle1);
-
         final TextView levelCount = (TextView) findViewById(R.id.level_count);
+
+        sprite.setImageResource(UserSpirit.image_idle1);
 
         sprite.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (affinityPoint > 0) {
+                if ((stepCount - affinityLevel*FACTOR) > FACTOR) {
                     affinityLevel++;
-                    affinityPoint--;
                 }
-                updateAffinityImage(affinityPoint);
+                UserSpirit.setAffinityLevel(affinityLevel);
                 changeText(levelCount, "" + affinityLevel);
             }
         });
@@ -88,7 +97,37 @@ public class MainActivity extends AppCompatActivity{
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter((GoogleFitSync.FIT_NOTIFY_INTENT)));
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(GoogleFitSync.STEP_COUNT));
 
-        requestGoogleFitSync();
+        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(this,0,alarmIntent,0);
+    }
+
+    public class AlarmReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent){
+            affinityLevel = UserSpirit.getAffinityLevel();
+            requestGoogleFitSync();
+            if (UserSpirit.evolveCheck(affinityLevel)!= null){
+                UserSpirit = UserSpirit.evolveCheck(affinityLevel);
+            }
+            saveSpirits();
+        }
+    }
+    public void saveSpirits(){
+        try{
+            mSerializer.save(UserSpirit);
+            Log.e("JSON", "Saved successfully");
+        }catch(Exception e){
+            Log.e("ERROR", "Error Saving notes");
+        }
+    }
+
+
+    public void startAlarm(View view){
+        alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        int interval = 1000*60;
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
+        Log.d("AlarmService", "Alarm Started");
     }
 
     private void requestGoogleFitSync(){
@@ -151,57 +190,8 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-    private void updateAffinityImage(int affinityPoint){
-        ImageView heart01 = (ImageView) findViewById(R.id.heart01);
-        ImageView heart02 = (ImageView) findViewById(R.id.heart02);
-        ImageView heart03 = (ImageView) findViewById(R.id.heart03);
-        ImageView heart04 = (ImageView) findViewById(R.id.heart04);
-        ImageView heart05 = (ImageView) findViewById(R.id.heart05);
-
-        switch(affinityPoint){
-            case 5:
-                changeImage(heart01,R.drawable.view_fullheart);
-                changeImage(heart02,R.drawable.view_fullheart);
-                changeImage(heart03,R.drawable.view_fullheart);
-                changeImage(heart04,R.drawable.view_fullheart);
-                changeImage(heart05,R.drawable.view_fullheart);
-                break;
-            case 4:
-                changeImage(heart01,R.drawable.view_fullheart);
-                changeImage(heart02,R.drawable.view_fullheart);
-                changeImage(heart03,R.drawable.view_fullheart);
-                changeImage(heart04,R.drawable.view_fullheart);
-                changeImage(heart05,R.drawable.view_emptyheart);
-                break;
-            case 3:
-                changeImage(heart01,R.drawable.view_fullheart);
-                changeImage(heart02,R.drawable.view_fullheart);
-                changeImage(heart03,R.drawable.view_fullheart);
-                changeImage(heart04,R.drawable.view_emptyheart);
-                changeImage(heart05,R.drawable.view_emptyheart);
-                break;
-            case 2:
-                changeImage(heart01,R.drawable.view_fullheart);
-                changeImage(heart02,R.drawable.view_fullheart);
-                changeImage(heart03,R.drawable.view_emptyheart);
-                changeImage(heart04,R.drawable.view_emptyheart);
-                changeImage(heart05,R.drawable.view_emptyheart);
-                break;
-            case 1:
-                changeImage(heart01,R.drawable.view_fullheart);
-                changeImage(heart02,R.drawable.view_emptyheart);
-                changeImage(heart03,R.drawable.view_emptyheart);
-                changeImage(heart04,R.drawable.view_emptyheart);
-                changeImage(heart05,R.drawable.view_emptyheart);
-                break;
-            case 0:
-                changeImage(heart01,R.drawable.view_emptyheart);
-                changeImage(heart02,R.drawable.view_emptyheart);
-                changeImage(heart03,R.drawable.view_emptyheart);
-                changeImage(heart04,R.drawable.view_emptyheart);
-                changeImage(heart05,R.drawable.view_emptyheart);
-                break;
-        }
+    private int updateAffinityPoint(int stepCount, int affinityLevel){
+        return (stepCount - FACTOR*affinityLevel)/FACTOR;
     }
 
     private void changeImage(ImageView view, int drawable){
@@ -211,6 +201,4 @@ public class MainActivity extends AppCompatActivity{
     private void changeText(TextView view, String string){
         view.setText(string);
     }
-
-
 }

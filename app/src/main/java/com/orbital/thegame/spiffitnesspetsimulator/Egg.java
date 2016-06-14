@@ -13,32 +13,34 @@ public class Egg extends Spirits{
     public int image_happy1 = R.drawable.egg_happy1;
     public int image_happy2 = R.drawable.egg_happy2;
 
-    public Egg(Calendar cal){
+    public Egg(){
+        super();
         setStartTime(cal.getTimeInMillis());
         cal.add(Calendar.DAY_OF_WEEK, 3);
         setEndTime(cal.getTimeInMillis());
         setAffinityLevel(0);
     }
 
-    public void evolveCheck(){
+    public Spirits evolveCheck(){
         Calendar cal = Calendar.getInstance();
         Date now = new Date();
         cal.setTime(now);
 
         if (cal.getTimeInMillis() > getEndTime()){
-            evolveBranch(getAffinityLevel());
+            return evolve(getAffinityLevel());
         }
+        return null;
     }
 
-    public void evolveBranch(int affinityLevel){
+    public Spirits evolve(int affinityLevel){
         if (Panda_Baby.check(affinityLevel)){
-            MainActivity.UserSpirit = new Panda_Baby(affinityLevel);
+            return new Panda_Baby(affinityLevel);
         }
         else if (Penguin_Baby.check(affinityLevel)){
-            MainActivity.UserSpirit = new Penguin_Baby(affinityLevel);
+            return new Penguin_Baby(affinityLevel);
         }
         else {
-            MainActivity.UserSpirit = new Pig_Baby(affinityLevel);
+            return new Pig_Baby(affinityLevel);
         }
     }
 }

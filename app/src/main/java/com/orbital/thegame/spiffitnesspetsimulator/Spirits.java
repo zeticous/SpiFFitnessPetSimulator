@@ -10,9 +10,18 @@ public class Spirits {
     public int image_happy1;
     public int image_happy2;
 
-    private int affinityLevel;
-    private long startTime, endTime;
-    private static int minimumAffinity;
+    protected int affinityLevel;
+    protected long startTime, endTime;
+    protected boolean isAdult = false;
+
+    protected Calendar cal;
+
+    public Spirits(){
+        this.cal = Calendar.getInstance();
+        Date now = new Date();
+        this.cal.setTime(now);
+    }
+
 
     public long getStartTime() {
         return startTime;
@@ -38,14 +47,11 @@ public class Spirits {
         this.affinityLevel = affinityLevel;
     }
 
-    public static boolean check(int affinityLevel){
-        return affinityLevel > minimumAffinity;
+    public Spirits evolveCheck(int affinityLevel) {
+        return null;
     }
 
-    public static void initialise(){
-        Calendar cal = Calendar.getInstance();
-        Date now = new Date();
-        cal.setTime(now);
-        MainActivity.UserSpirit = new Egg(cal);
+    public boolean check(int affinityLevel){
+        return false;
     }
 }
