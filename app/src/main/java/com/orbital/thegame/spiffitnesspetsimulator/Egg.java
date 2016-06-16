@@ -21,22 +21,25 @@ public class Egg extends Spirits{
         setAffinityLevel(0);
     }
 
-    public Spirits evolveCheck(){
+    @Override
+    public Spirits evolveCheck(int affinityLevel){
         Calendar cal = Calendar.getInstance();
         Date now = new Date();
         cal.setTime(now);
 
         if (cal.getTimeInMillis() > getEndTime()){
-            return evolve(getAffinityLevel());
+            return evolve(affinityLevel);
         }
         return null;
     }
 
     public Spirits evolve(int affinityLevel){
-        if (Panda_Baby.check(affinityLevel)){
+        Spirits reference = new Panda_Baby(0);
+        if (reference.check(affinityLevel)){
             return new Panda_Baby(affinityLevel);
         }
-        else if (Penguin_Baby.check(affinityLevel)){
+        reference = new Penguin_Baby(0);
+        if (reference.check(affinityLevel)){
             return new Penguin_Baby(affinityLevel);
         }
         else {

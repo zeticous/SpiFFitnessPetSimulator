@@ -9,7 +9,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0"
+        versionName "0.2b"
     }
     buildTypes {
         release {
@@ -27,6 +27,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.3.0'
-    compile 'com.google.android.gms:play-services-fitness:8.4.0'
-    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.google.android.gms:play-services-fitness:9.0.1'
+    compile 'com.google.code.gson:gson:2.4'
 }

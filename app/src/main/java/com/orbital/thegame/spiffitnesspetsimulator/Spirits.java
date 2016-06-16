@@ -10,9 +10,13 @@ public class Spirits {
     public int image_happy1;
     public int image_happy2;
 
+    protected int stepCount;
     protected int affinityLevel;
+    protected int affinityPoint;
     protected long startTime, endTime;
     protected boolean isAdult = false;
+
+    private JSONSerializer mSerializer;
 
     protected Calendar cal;
 
@@ -20,8 +24,25 @@ public class Spirits {
         this.cal = Calendar.getInstance();
         Date now = new Date();
         this.cal.setTime(now);
+        setStepCount(0);
+        setAffinityPoint(0);
     }
 
+    public int getAffinityPoint() {
+        return affinityPoint;
+    }
+
+    public void setAffinityPoint(int affinityPoint) {
+        this.affinityPoint = affinityPoint;
+    }
+
+    public int getStepCount() {
+        return stepCount;
+    }
+
+    public void setStepCount(int stepCount) {
+        this.stepCount = stepCount;
+    }
 
     public long getStartTime() {
         return startTime;

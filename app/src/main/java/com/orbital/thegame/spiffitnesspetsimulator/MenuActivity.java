@@ -12,6 +12,6 @@ public class MenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
 
         TextView expCount = (TextView) findViewById(R.id.maxExp);
-        expCount.setText(""+ MainActivity.stepCount);
+        expCount.setText(""+ GameService.UserSpirit.getStepCount());
     }
 }

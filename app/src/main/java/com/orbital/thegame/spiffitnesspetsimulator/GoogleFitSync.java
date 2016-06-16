@@ -28,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 
 public class GoogleFitSync extends IntentService {
     public static final String TAG = "GoogleFitService";
+
     private GoogleApiClient mGoogleApiFitnessClient;
     private boolean mTryingToConnect = false;
 
@@ -61,6 +62,7 @@ public class GoogleFitSync extends IntentService {
     public void buildFitnessClient(){
         mGoogleApiFitnessClient = new GoogleApiClient.Builder(this)
                 .addApi(Fitness.HISTORY_API)
+                .addApi(Fitness.RECORDING_API)
                 .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
                 .addConnectionCallbacks(
                         new GoogleApiClient.ConnectionCallbacks() {
@@ -97,6 +99,7 @@ public class GoogleFitSync extends IntentService {
     protected void onHandleIntent(Intent intent){
         boolean connectionStatusRequest = intent.getBooleanExtra(TYPE_REQUEST_CONNECTION, false);
         boolean stepDataRequest = intent.getBooleanExtra(TYPE_GET_STEP_DATA, false);
+
         if (connectionStatusRequest){
             if (!mGoogleApiFitnessClient.isConnected()){
                 mTryingToConnect=true;
@@ -133,7 +136,7 @@ public class GoogleFitSync extends IntentService {
 
         DataReadRequest readRequest = new DataReadRequest.Builder()
                 .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
-                .bucketByTime(3, TimeUnit.DAYS)
+                .bucketByTime(1, TimeUnit.DAYS)
                 .setTimeRange(startTime,endTime,TimeUnit.MILLISECONDS)
                 .build();
 

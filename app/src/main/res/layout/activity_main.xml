@@ -36,60 +36,38 @@
         android:orientation="horizontal">
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textColor="#FFFFFF"
+            android:text="Affinity:"
+            android:id="@+id/affinity_title"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="8dp"/>
+
+        <TextView
             android:id="@+id/experience"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Exp"
-            android:layout_centerVertical="true"
+            android:text="0"
             android:textSize="24sp"
             android:textColor="#FFFFFF"
+            android:layout_alignBaseline="@+id/affinity_title"
+            android:layout_alignBottom="@+id/affinity_title"
+            android:layout_toEndOf="@+id/affinity_title"
             android:layout_marginLeft="8dp"/>
-
-        <ImageView
-            android:id="@+id/heart01"
-            android:layout_width="24dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/view_emptyheart"
-            android:layout_toRightOf="@id/experience"
-            android:layout_marginLeft="8dp"/>
-
-        <ImageView
-            android:id="@+id/heart02"
-            android:layout_width="24dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/view_emptyheart"
-            android:layout_toRightOf="@id/heart01" />
-
-        <ImageView
-            android:id="@+id/heart03"
-            android:layout_width="24dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/view_emptyheart"
-            android:layout_toRightOf="@id/heart02" />
-
-        <ImageView
-            android:id="@+id/heart04"
-            android:layout_width="24dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/view_emptyheart"
-            android:layout_toRightOf="@id/heart03" />
-
-        <ImageView
-            android:id="@+id/heart05"
-            android:layout_width="24dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/view_emptyheart"
-            android:layout_toRightOf="@id/heart04"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="01"
+            android:text="0"
             android:id="@+id/level_count"
+            android:textSize="24sp"
+            android:textColor="#FFFFFF"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
-            android:textSize="24sp"
-            android:textColor="#FFFFFF"/>
+            android:layout_marginRight="8dp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -101,6 +79,7 @@
             android:textSize="24sp"
             android:textColor="#FFFFFF"
             android:layout_marginRight="8dp"/>
+
     </RelativeLayout>
 
     <LinearLayout

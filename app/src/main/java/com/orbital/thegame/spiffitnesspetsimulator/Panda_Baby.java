@@ -34,8 +34,11 @@ public class Panda_Baby extends Spirit_Baby {
 
     @Override
     public Spirits evolveCheck(int affinityLevel) {
-        Panda_Adult reference = new Panda_Adult(0);
-        if (reference.check(affinityLevel)) {
+    //    Panda_Adult reference = new Panda_Adult(0);
+    //    if (reference.check(affinityLevel)) {
+    //        return new Panda_Adult(affinityLevel);
+    //    }
+        if (check(affinityLevel)) {
             return new Panda_Adult(affinityLevel);
         }
         return null;
