@@ -25,9 +25,6 @@
             android:name=".GameService"
             android:enabled="true"
             android:exported="true"/>
-        <receiver
-            android:name=".AlarmReceiver"
-            android:enabled="true"/>
     </application>
 
 </manifest>

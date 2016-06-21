@@ -1,5 +1,6 @@
 package com.orbital.thegame.spiffitnesspetsimulator;
 
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -18,7 +19,8 @@ public class GameService extends Service {
     private JSONSerializer mSerializer;
 
     public final static String TAG = "GoogleFitService";
-    boolean authInProgress = false;
+    public final static String ALARM_RECEIVE = "com.orbital.thegame.spiffitnesspetsimulator.gameservice.alarmreceiver";
+    private IntentFilter intentFilter = new IntentFilter(ALARM_RECEIVE);
 
     AlarmReceiver alarmManager;
 
@@ -26,6 +28,7 @@ public class GameService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(LOG, "STARTED: onStartCommand");
         alarmManager = new AlarmReceiver();
+        registerReceiver(alarmManager, intentFilter);
         alarmManager.setAlarm(this);
 
         return START_STICKY;
@@ -35,6 +38,31 @@ public class GameService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
+
+    public class AlarmReceiver extends BroadcastReceiver {
+        private final String TAG = "AlarmReceiver";
+
+        @Override
+        public void onReceive (Context context, Intent intent){
+            Log.d(TAG, "STARTED: onReceive");
+
+            int affinityLevel = UserSpirit.getAffinityLevel();
+            requestGoogleFitSync();
+            UserSpirit.evolveCheck(affinityLevel);
+
+            saveSpirits();
+        }
+
+        public void setAlarm(Context context){
+            Log.d(TAG, "STARTED: setAlarm");
+
+            AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent (ALARM_RECEIVE);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0,intent,0);
+            alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000*60, pendingIntent);
+        }
+    }
+
 
     public void requestGoogleFitSync() {
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter((GoogleFitSync.FIT_NOTIFY_INTENT)));

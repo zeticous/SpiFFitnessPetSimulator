@@ -4,9 +4,11 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -15,11 +17,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.fitness.FitnessStatusCodes;
 
 
 public class MainActivity extends AppCompatActivity{
 
     private JSONSerializer mSerializer;
+    private boolean authInProgress = false;
     public static final int FACTOR = 1000;
     public static final int REQUEST_OAUTH = 1337;
     public final static String TAG = "GoogleFitService";
@@ -32,6 +36,7 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         mSerializer = new JSONSerializer("Spirits.json", MainActivity.this.getApplicationContext());
 
+        Log.d("MainActivity", "onCreate started");
         SharedPreferences settings = getSharedPreferences("GameSettings", 0);
         if (settings.getBoolean("firstLaunch", true)) {
             Log.d("Settings", "First Launch Detected");
@@ -91,30 +96,68 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-        Intent i = new Intent(this, GameService.class);
-        startService(i);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter((GoogleFitSync.FIT_NOTIFY_INTENT)));
+        requestConnection();
     }
 
-    private BroadcastReceiver ResolutionReceiver = new BroadcastReceiver() {
+    private void requestConnection(){
+        Log.d("MainActivity","STARTED: requestConnection");
+        Intent service = new Intent(this, GoogleFitSync.class);
+        service.putExtra(GoogleFitSync.TYPE_REQUEST_CONNECTION, GoogleFitSync.TYPE_TRUE);
+        service.putExtra(GoogleFitSync.TYPE_GET_STEP_DATA, GoogleFitSync.TYPE_TRUE);
+        startService(service);
+    }
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("ResolutionReceiver", "Checking connection:");
-            if (intent.hasExtra("REQUEST_RESOLUTION")){
-                PendingIntent pendingIntent = intent.getParcelableExtra("PENDING_INTENT");
-                int errorCode = intent.getIntExtra("ERROR_CODE", 1337);
-                ConnectionResult result = new ConnectionResult(errorCode,pendingIntent);
-                handleResolution(result);
+            Log.d(TAG, "Executing Connection onReceive");
+            if(intent.hasExtra(GoogleFitSync.FIT_EXTRA_NOTIFY_FAILED_STATUS_CODE)&&
+                    intent.hasExtra(GoogleFitSync.FIT_EXTRA_NOTIFY_FAILED_STATUS_CODE)){
+                int errorCode = intent.getIntExtra(GoogleFitSync.FIT_EXTRA_NOTIFY_FAILED_STATUS_CODE, 0);
+                PendingIntent pendingIntent = intent.getParcelableExtra(GoogleFitSync.FIT_EXTRA_NOTIFY_FAILED_INTENT);
+
+                ConnectionResult result = new ConnectionResult(errorCode, pendingIntent);
+                Log.d(TAG, "Fit connection failed - opening connect screen.");
+                fitHandleFailedConnection(result);
+            }
+
+            if(intent.hasExtra(GoogleFitSync.FIT_EXTRA_CONNECTION_MESSAGE)){
+                Log.d(TAG, "Fit connection successful - closing connect screen if it's open.");
+                fitHandleConnection();
             }
         }
     };
 
-    private void handleResolution(ConnectionResult result){
-        try{
-            result.startResolutionForResult(MainActivity.this, REQUEST_OAUTH);
-        }catch(IntentSender.SendIntentException e){
-            Log.e(TAG, "Activity thread Google Fit Exception while starting resolution activity", e);
+    private void fitHandleConnection(){
+        Log.e(TAG, "Fit connected");
+    }
+
+    private void fitHandleFailedConnection(ConnectionResult result) {
+        Log.i(TAG, "Google Fit Connection failed. Cause: " + result.toString());
+        if (!result.hasResolution()) {
+            Log.e(TAG, "Google Fit connection failed not due to false hasResolution");
+            return;
+        }
+        if (!authInProgress) {
+            if (result.getErrorCode() == FitnessStatusCodes.NEEDS_OAUTH_PERMISSIONS) {
+                try {
+                    Log.d(TAG, "Google Fit connection failed with OAuth failure. trying to ask for consent(again)");
+                    result.startResolutionForResult(MainActivity.this, REQUEST_OAUTH);
+                } catch (IntentSender.SendIntentException e) {
+                    Log.e(TAG, "Activity Thread Google Fit Exception while starting resolution activity", e);
+                }
+            } else {
+                try {
+                    Log.i(TAG, "Activity thread Google Fit Attempting to resolve failed connection");
+                    result.startResolutionForResult(MainActivity.this, REQUEST_OAUTH);
+                } catch (IntentSender.SendIntentException e) {
+                    Log.e(TAG, "Activity Thread Google Fit Exception while starting resolution activity", e);
+                }
+            }
         }
     }
+
 
     private void updateAffinityPoint(int stepCount, int affinityLevel){
         int affinityPoint = (stepCount - FACTOR*affinityLevel)/FACTOR;
