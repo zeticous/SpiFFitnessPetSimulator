@@ -3,26 +3,20 @@ package com.orbital.thegame.spiffitnesspetsimulator;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * Created by Qi Wei on 14/6/2016.
- */
 public class Spirit_Baby extends Spirits {
-    public Spirit_Baby(int affinityLevel) {
+    public Spirit_Baby() {
         super();
-        setAffinityLevel(affinityLevel);
-        spirit_baby_start();
+        setStartTime(cal.getTimeInMillis());
+        cal.add(Calendar.DAY_OF_WEEK, 7);
+        setEndTime(cal.getTimeInMillis());
     }
 
     public Spirit_Baby(int stepCount, long startTime, long endTime, int affinityLevel){
         super(stepCount,startTime,endTime,affinityLevel);
-        spirit_baby_start();
-    }
-
-    public void spirit_baby_start(){
-        setStartTime(cal.getTimeInMillis());
-        cal.add(Calendar.DAY_OF_WEEK, 7);
-        setEndTime(cal.getTimeInMillis());
-
+        setStartTime(startTime);
+        setEndTime(endTime);
+        setAffinityLevel(affinityLevel);
+        setStepCount(stepCount);
     }
 
     public void runCheck() {
@@ -34,7 +28,6 @@ public class Spirit_Baby extends Spirits {
             runAway();
         }
     }
-
     public Spirits runAway() {
         return new Egg();
     }

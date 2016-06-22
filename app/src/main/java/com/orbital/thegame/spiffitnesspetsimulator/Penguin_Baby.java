@@ -5,16 +5,15 @@ package com.orbital.thegame.spiffitnesspetsimulator;
  */
 public class Penguin_Baby extends Spirit_Baby {
 
-    private int minimumAffinity = 20;
-
-    public Penguin_Baby(int affinityLevel){
-       super(affinityLevel);
+    public Penguin_Baby(){
+       super();
         setImage_idle1(R.drawable.penguin_baby_idle1);
         setImage_idle2(R.drawable.penguin_baby_idle2);
         setImage_happy1(R.drawable.penguin_baby_happy1);
         setImage_happy2(R.drawable.penguin_baby_happy2);
         setName("penguinBaby");
         setRegister(PENGUIN_BABY_REG);
+        setMinimumAffinity(20);
     }
     public Penguin_Baby(int stepCount, long startTime, long endTime, int affinityLevel){
         super(stepCount, startTime, endTime, affinityLevel);
@@ -23,12 +22,8 @@ public class Penguin_Baby extends Spirit_Baby {
 
     public Spirits evolveCheck(int affinityLevel) {
         if (check(affinityLevel)) {
-            return new Penguin_Adult(affinityLevel);
+            return new Penguin_Adult();
         }
         return null;
-    }
-
-    public boolean check(int affinityLevel){
-        return affinityLevel > minimumAffinity;
     }
 }

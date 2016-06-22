@@ -7,8 +7,8 @@ public class Pig_Baby extends Spirit_Baby{
 
     private int minimumAffinity = 0;
 
-    public Pig_Baby(int affinityLevel){
-        super(affinityLevel);
+    public Pig_Baby(){
+        super();
         setImage_idle1(R.drawable.pig_baby_idle1);
         setImage_idle2(R.drawable.pig_baby_idle2);
         setImage_happy1(R.drawable.pig_baby_happy1);
@@ -19,12 +19,17 @@ public class Pig_Baby extends Spirit_Baby{
 
     public Pig_Baby(int stepCount, long startTime, long endTime, int affinityLevel){
         super(stepCount, startTime, endTime, affinityLevel);
+        setImage_idle1(R.drawable.pig_baby_idle1);
+        setImage_idle2(R.drawable.pig_baby_idle2);
+        setImage_happy1(R.drawable.pig_baby_happy1);
+        setImage_happy2(R.drawable.pig_baby_happy2);
+        setName("pigBaby");
         setRegister(PIG_BABY_REG);
     }
 
     public Spirits evolveCheck(int affinityLevel) {
         if (check(affinityLevel)) {
-            return new Pig_Adult(affinityLevel);
+            return new Pig_Adult();
         }
         return null;
     }

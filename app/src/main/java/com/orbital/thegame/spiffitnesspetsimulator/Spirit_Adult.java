@@ -7,22 +7,20 @@ import java.util.Calendar;
  */
 public class Spirit_Adult extends Spirits {
 
-    public Spirit_Adult(int affinityLevel) {
+    public Spirit_Adult() {
         super();
         isAdult = true;
-        setAffinityLevel(affinityLevel);
-        adult_start();
+        setStartTime(cal.getTimeInMillis());
+        cal.add(Calendar.DAY_OF_WEEK, 99);
+        setEndTime(cal.getTimeInMillis());
     }
 
     public Spirit_Adult(int stepCount, long startTime, long endTime, int affinityLevel){
         super(stepCount,startTime,endTime,affinityLevel);
-        adult_start();
-    }
-
-    private void adult_start(){
-        setStartTime(cal.getTimeInMillis());
-        cal.add(Calendar.DAY_OF_WEEK, 99);
-        setEndTime(cal.getTimeInMillis());
+        setStartTime(startTime);
+        setEndTime(endTime);
+        setAffinityLevel(affinityLevel);
+        setStepCount(stepCount);
     }
 
     public Spirits releaseSpirit(){

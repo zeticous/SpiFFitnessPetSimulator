@@ -16,9 +16,8 @@ public class GameService extends Service {
     private final static String LOG = "GameService";
     public static Spirits UserSpirit;
     int stepCount;
+    public final static int FACTOR = 2;
     public static final String MY_PREFS_NAME = "MyPrefsFile";
-
-    private JSONSerializer mSerializer;
 
     public final static String TAG = "GoogleFitService";
     public final static String ALARM_RECEIVE = "com.orbital.thegame.spiffitnesspetsimulator.gameservice.alarmreceiver";
@@ -43,18 +42,22 @@ public class GameService extends Service {
         return null;
     }
 
-    public class AlarmReceiver extends BroadcastReceiver {
+    private class AlarmReceiver extends BroadcastReceiver {
         private final String TAG = "AlarmReceiver";
 
         @Override
         public void onReceive (Context context, Intent intent){
             Log.d(TAG, "STARTED: onReceive");
 
-            int affinityLevel = UserSpirit.getAffinityLevel();
+            updateAffinityPoint();
             requestGoogleFitSync();
-            UserSpirit.evolveCheck(affinityLevel);
 
+            int affinityLevel = UserSpirit.getAffinityLevel();
+            if (UserSpirit.evolveCheck(affinityLevel)!=null){
+                UserSpirit = UserSpirit.evolveCheck(affinityLevel);
+            }
             saveSpirits();
+
         }
 
         public void setAlarm(Context context){
@@ -67,6 +70,16 @@ public class GameService extends Service {
         }
     }
 
+    public static void updateAffinityPoint(){
+        int affinityLevel = UserSpirit.getAffinityLevel();
+        int stepCount = UserSpirit.getStepCount();
+        int affinityPoint = (stepCount - FACTOR*affinityLevel)/FACTOR;
+
+        Log.d("GAMESERVICE", "AffinityLevel: " + affinityLevel);
+        Log.d("GAMESERVICE", "StepCount: " + stepCount);
+        Log.d("GAMESERVICE", "AffinityPoint: " + affinityPoint);
+        UserSpirit.setAffinityPoint(affinityPoint);
+    }
 
     public void requestGoogleFitSync() {
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter((GoogleFitSync.FIT_NOTIFY_INTENT)));
@@ -106,6 +119,7 @@ public class GameService extends Service {
                 stepCount = intent.getIntExtra(GoogleFitSync.STEP_COUNT, 0);
                 Log.e(TAG, "Broadcast Value: " + stepCount);
                 UserSpirit.setStepCount(stepCount);
+                saveSpirits();
             }
         }
     };

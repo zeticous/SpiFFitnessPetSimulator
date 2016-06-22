@@ -1,5 +1,6 @@
 package com.orbital.thegame.spiffitnesspetsimulator;
 
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -24,15 +25,16 @@ import com.google.android.gms.fitness.FitnessStatusCodes;
 
 public class MainActivity extends AppCompatActivity{
     boolean authInProgress = false;
-    public static final int FACTOR = 1000;
     public static final int REQUEST_OAUTH = 1337;
     public final static String TAG = "GoogleFitService";
-    int stepCount;
-    int affinityLevel;
+    int stepCount, affinityLevel, affinityPoint;
 
     public final static String PTAG = "SharedPref";
     public static final String MY_PREFS_NAME = "MyPrefsFile";
 
+    public final static String MAIN_ALARM = "com.orbital.thegame.spiffitnesspetsimulator.mainactivity.alarmreceiver";
+    private IntentFilter intentFilter = new IntentFilter(MAIN_ALARM);
+    AlarmReceiver alarmManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +57,9 @@ public class MainActivity extends AppCompatActivity{
             loadSpirits();
         }
 
-        Spirits SpiritInstance = GameService.UserSpirit;
-        stepCount = SpiritInstance.getStepCount();
-        affinityLevel = SpiritInstance.getAffinityLevel();
+        stepCount = GameService.UserSpirit.getStepCount();
+        affinityLevel = GameService.UserSpirit.getAffinityLevel();
+        affinityPoint = GameService.UserSpirit.getAffinityPoint();
 
         ImageButton sprite = (ImageButton) findViewById(R.id.sprite);
         ImageButton menu = (ImageButton) findViewById(R.id.menu);
@@ -65,24 +67,23 @@ public class MainActivity extends AppCompatActivity{
         ImageButton record = (ImageButton) findViewById(R.id.record);
 
         final TextView levelCount = (TextView) findViewById(R.id.level_count);
+        final TextView affinityPointCount = (TextView) findViewById(R.id.experience);
 
-        updateAffinityPoint(stepCount, affinityLevel);
-
-        changeImage(sprite, SpiritInstance.getImage_idle1());
+        changeImage(sprite, GameService.UserSpirit.getImage_idle1());
+        changeText(levelCount, "" + affinityLevel);
+        changeText(affinityPointCount, "" + affinityPoint);
 
         assert sprite != null;
         sprite.setOnClickListener(new View.OnClickListener() {
-            int stepCount = GameService.UserSpirit.getStepCount();
-            int affinityLevel = GameService.UserSpirit.getAffinityLevel();
-
             public void onClick(View v) {
-                if ((stepCount - affinityLevel * FACTOR) > FACTOR) {
+                if (affinityPoint > 0) {
                     affinityLevel++;
+                    affinityPoint--;
                 }
                 GameService.UserSpirit.setAffinityLevel(affinityLevel);
+                GameService.UserSpirit.setAffinityPoint(affinityPoint);
                 changeText(levelCount, "" + affinityLevel);
-
-                updateAffinityPoint(stepCount, affinityLevel);
+                changeText(affinityPointCount, "" + affinityPoint);
             }
         });
 
@@ -109,6 +110,66 @@ public class MainActivity extends AppCompatActivity{
         startService(intent);
     }
 
+    private void changeImage(ImageView view, int drawable){
+        view.setImageResource(drawable);
+    }
+
+    private void changeText(TextView view, String string){
+        view.setText(string);
+    }
+
+    //This portion of the code is for regular update of the screen on every 60 seconds interval.
+    private class AlarmReceiver extends BroadcastReceiver{
+        private final String TAG = "Main_AlarmReceiver";
+
+        @Override
+        public void onReceive(Context context, Intent intent){
+            Log.d(TAG, "STARTED: onReceive");
+
+            GameService.updateAffinityPoint();
+
+            final TextView levelCount = (TextView) findViewById(R.id.level_count);
+            final TextView affinityPointCount = (TextView) findViewById(R.id.experience);
+
+            int affinityLevel = GameService.UserSpirit.getAffinityLevel();
+            int affinityPoint = GameService.UserSpirit.getAffinityPoint();
+
+            changeText(levelCount, ""+ affinityLevel);
+            changeText(affinityPointCount, "" +affinityPoint);
+        }
+
+        public void setAlarm(Context context){
+            Log.d("MainActivity", "STARTED: setAlarm");
+            AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            Intent intent = new Intent (MAIN_ALARM);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0,intent,0);
+            alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000*60, pendingIntent);
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        startAlarm();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        try {
+            unregisterReceiver(alarmManager);
+        }catch(IllegalArgumentException e){
+            Log.d("MainActivity","alarmManager already destroyed");
+        }
+    }
+
+    private void startAlarm(){
+        AlarmReceiver alarmManager = new AlarmReceiver();
+        registerReceiver(alarmManager, new IntentFilter(MAIN_ALARM));
+        alarmManager.setAlarm(this);
+    }
+
+    // This portion of the code is for Google Fit Connection
     private void requestConnection(){
         Log.d("MainActivity","STARTED: requestConnection");
         Intent service = new Intent(this, GoogleFitSync.class);
@@ -167,22 +228,7 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-
-    private void updateAffinityPoint(int stepCount, int affinityLevel){
-        int affinityPoint = (stepCount - FACTOR*affinityLevel)/FACTOR;
-        TextView txt = (TextView) findViewById(R.id.experience);
-
-        changeText(txt, ""+affinityPoint);
-    }
-
-    private void changeImage(ImageView view, int drawable){
-        view.setImageResource(drawable);
-    }
-
-    private void changeText(TextView view, String string){
-        view.setText(string);
-    }
-
+    // This portion of the code is for saving and loading of game data.
     public void saveSpirits(){
         SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
         editor.putString("spiritName", GameService.UserSpirit.getName());
@@ -242,13 +288,14 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
+    // This portion of the code is for double tap back to exit.
     boolean doubleBackToExitPressedOnce = false;
 
     @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
-            return;
+            this.finish();
         }
 
         this.doubleBackToExitPressedOnce = true;

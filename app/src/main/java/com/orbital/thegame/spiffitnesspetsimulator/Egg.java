@@ -1,5 +1,7 @@
 package com.orbital.thegame.spiffitnesspetsimulator;
 
+import android.util.Log;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -12,7 +14,7 @@ public class Egg extends Spirits{
         super();
         egg_start();
         setStartTime(cal.getTimeInMillis());
-        cal.add(Calendar.DAY_OF_WEEK, 3);
+        cal.add(Calendar.MINUTE, 5);
         setEndTime(cal.getTimeInMillis());
         setAffinityLevel(0);
     }
@@ -33,6 +35,7 @@ public class Egg extends Spirits{
 
     @Override
     public Spirits evolveCheck(int affinityLevel){
+        Log.d("EGG", "RUNNING EVOLVE CHECK");
         Calendar cal = Calendar.getInstance();
         Date now = new Date();
         cal.setTime(now);
@@ -44,16 +47,16 @@ public class Egg extends Spirits{
     }
 
     public Spirits evolve(int affinityLevel){
-        Spirits reference = new Panda_Baby(0);
+        Spirits reference = new Panda_Baby();
         if (reference.check(affinityLevel)){
-            return new Panda_Baby(affinityLevel);
+            return new Panda_Baby();
         }
-        reference = new Penguin_Baby(0);
+        reference = new Penguin_Baby();
         if (reference.check(affinityLevel)){
-            return new Penguin_Baby(affinityLevel);
+            return new Penguin_Baby();
         }
         else {
-            return new Pig_Baby(affinityLevel);
+            return new Pig_Baby();
         }
     }
 }

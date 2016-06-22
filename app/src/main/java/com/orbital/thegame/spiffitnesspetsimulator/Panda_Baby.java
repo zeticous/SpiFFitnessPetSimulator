@@ -7,8 +7,8 @@ public class Panda_Baby extends Spirit_Baby {
 
     private int minimumAffinity = 30;
 
-    public Panda_Baby(int affinityLevel) {
-        super(affinityLevel);
+    public Panda_Baby() {
+        super();
         setImage_idle1(R.drawable.panda_baby_idle1);
         setImage_idle2(R.drawable.panda_baby_idle2);
         setImage_happy1(R.drawable.panda_baby_happy1);
@@ -24,17 +24,9 @@ public class Panda_Baby extends Spirit_Baby {
 
     @Override
     public Spirits evolveCheck(int affinityLevel) {
-    //    Panda_Adult reference = new Panda_Adult(0);
-    //    if (reference.check(affinityLevel)) {
-    //        return new Panda_Adult(affinityLevel);
-    //    }
         if (check(affinityLevel)) {
-            return new Panda_Adult(affinityLevel);
+            return new Panda_Adult();
         }
         return null;
-    }
-
-    public boolean check(int affinityLevel){
-        return affinityLevel > minimumAffinity;
     }
 }

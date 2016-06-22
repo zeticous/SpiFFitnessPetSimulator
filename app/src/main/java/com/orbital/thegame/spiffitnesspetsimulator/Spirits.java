@@ -6,10 +6,13 @@ import java.util.Date;
 public class Spirits {
 
     public static final int EGG_REG = 10000;
+
     public static final int PIG_BABY_REG = 10001;
     public static final int PIG_ADULT_REG = 10002;
+
     public static final int PENGUIN_BABY_REG = 10003;
     public static final int PENGUIN_ADULT_REG = 10004;
+
     public static final int PANDA_BABY_REG = 10005;
     public static final int PANDA_ADULT_REG = 10006;
 
@@ -56,6 +59,7 @@ public class Spirits {
     protected long startTime, endTime;
     protected boolean isAdult = false;
     private int register = 99999;
+    private int minimumAffinity;
 
     public int getRegister() {
         return register;
@@ -67,9 +71,7 @@ public class Spirits {
 
     protected String name;
 
-    private JSONSerializer mSerializer;
-
-    protected Calendar cal;
+    public Calendar cal;
 
     public Spirits(){
         this.cal = Calendar.getInstance();
@@ -77,6 +79,7 @@ public class Spirits {
         this.cal.setTime(now);
         setStepCount(0);
         setAffinityLevel(0);
+        setAffinityPoint(0);
     }
 
     public Spirits(int stepCount, long startTime, long endTime, int affinityLevel){
@@ -134,11 +137,19 @@ public class Spirits {
         this.affinityLevel = affinityLevel;
     }
 
+    public int getMinimumAffinity() {
+        return minimumAffinity;
+    }
+
+    public void setMinimumAffinity(int minimumAffinity) {
+        this.minimumAffinity = minimumAffinity;
+    }
+
     public Spirits evolveCheck(int affinityLevel) {
         return null;
     }
 
     public boolean check(int affinityLevel){
-        return false;
+        return affinityLevel > getMinimumAffinity();
     }
 }
