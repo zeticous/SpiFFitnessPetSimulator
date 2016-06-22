@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -15,26 +16,28 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.fitness.FitnessStatusCodes;
 
 
 public class MainActivity extends AppCompatActivity{
-
-    private JSONSerializer mSerializer;
-    private boolean authInProgress = false;
+    boolean authInProgress = false;
     public static final int FACTOR = 1000;
     public static final int REQUEST_OAUTH = 1337;
     public final static String TAG = "GoogleFitService";
-    int stepCount = 0;
-    int affinityLevel = 0;
+    int stepCount;
+    int affinityLevel;
+
+    public final static String PTAG = "SharedPref";
+    public static final String MY_PREFS_NAME = "MyPrefsFile";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mSerializer = new JSONSerializer("Spirits.json", MainActivity.this.getApplicationContext());
 
         Log.d("MainActivity", "onCreate started");
         SharedPreferences settings = getSharedPreferences("GameSettings", 0);
@@ -42,7 +45,7 @@ public class MainActivity extends AppCompatActivity{
             Log.d("Settings", "First Launch Detected");
             GameService.UserSpirit = new Egg();
 
-            if (GameService.UserSpirit != null) {
+            if (GameService.UserSpirit.getRegister() == Spirits.EGG_REG) {
                 Log.e("FirstLaunch", "UserSpirit successfully created");
                 saveSpirits();
             }
@@ -65,8 +68,9 @@ public class MainActivity extends AppCompatActivity{
 
         updateAffinityPoint(stepCount, affinityLevel);
 
-        changeImage(sprite, SpiritInstance.image_idle1);
+        changeImage(sprite, SpiritInstance.getImage_idle1());
 
+        assert sprite != null;
         sprite.setOnClickListener(new View.OnClickListener() {
             int stepCount = GameService.UserSpirit.getStepCount();
             int affinityLevel = GameService.UserSpirit.getAffinityLevel();
@@ -82,6 +86,7 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+        assert menu != null;
         menu.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, MenuActivity.class);
@@ -89,6 +94,7 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+        assert record != null;
         record.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, RecordsActivity.class);
@@ -98,6 +104,9 @@ public class MainActivity extends AppCompatActivity{
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter((GoogleFitSync.FIT_NOTIFY_INTENT)));
         requestConnection();
+
+        Intent intent = new Intent(this, GameService.class);
+        startService(intent);
     }
 
     private void requestConnection(){
@@ -175,23 +184,82 @@ public class MainActivity extends AppCompatActivity{
     }
 
     public void saveSpirits(){
-        try{
-            mSerializer.save(GameService.UserSpirit);
-            Log.e("JSON", "Saved successfully");
-        }catch(Exception e){
-            Log.e("JSON", "Error Saving notes");
-        }
+        SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+        editor.putString("spiritName", GameService.UserSpirit.getName());
+        editor.putInt("stepCount", GameService.UserSpirit.getStepCount());
+
+        editor.putLong("startTime", GameService.UserSpirit.getStartTime());
+        editor.putLong("endTime", GameService.UserSpirit.getEndTime());
+
+        editor.apply();
+        Log.d(PTAG, "Shared Preference saved");
     }
 
     public void loadSpirits(){
-        mSerializer = new JSONSerializer("Spirits.json", MainActivity.this.getApplicationContext());
-        try{
-            GameService.UserSpirit = mSerializer.load();
-            if (GameService.UserSpirit != null){
-                Log.e("JSON", "Successfully load");
-            }
-        }catch(Exception e) {
-            Log.e("JSON", "ERROR LOADING SPIRITS");
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        int restoredRegister = prefs.getInt("register", -99999);
+        int restoredStepCount = prefs.getInt("stepCount", -99999);
+        int restoredAffinityLevel = prefs.getInt("affinityLevel", -99);
+        long restoredStartTime = prefs.getLong("startTime", -9999);
+        long restoredEndTime = prefs.getLong("endTime", -9999);
+
+        Log.d(PTAG, "" + restoredRegister);
+        Log.d(PTAG, "" + restoredStepCount);
+        Log.d(PTAG, "" + restoredStartTime);
+        Log.d(PTAG, "" + restoredEndTime);
+
+        switch(restoredRegister){
+            case Spirits.EGG_REG:
+                GameService.UserSpirit = new Egg(restoredStepCount, restoredStartTime, restoredEndTime, restoredAffinityLevel);
+                Log.d(PTAG, "EGG load successful");
+                break;
+            case Spirits.PIG_BABY_REG:
+                GameService.UserSpirit = new Pig_Baby(restoredStepCount, restoredStartTime, restoredEndTime, restoredAffinityLevel);
+                Log.d(PTAG, "PIG_BABY load successful");
+                break;
+            case Spirits.PENGUIN_BABY_REG:
+                GameService.UserSpirit = new Penguin_Baby(restoredStepCount, restoredStartTime, restoredEndTime, restoredAffinityLevel);
+                Log.d(PTAG, "PENGUIN_BABY load successful");
+                break;
+            case Spirits.PANDA_BABY_REG:
+                GameService.UserSpirit = new Panda_Baby(restoredStepCount, restoredStartTime, restoredEndTime, restoredAffinityLevel);
+                Log.d(PTAG, "PANDA_BABY load successful");
+                break;
+            case Spirits.PIG_ADULT_REG:
+                GameService.UserSpirit = new Pig_Adult(restoredStepCount, restoredStartTime, restoredEndTime, restoredAffinityLevel);
+                Log.d(PTAG, "PIG_ADULT load successful");
+                break;
+            case Spirits.PENGUIN_ADULT_REG:
+                GameService.UserSpirit = new Penguin_Adult(restoredStepCount, restoredStartTime, restoredEndTime, restoredAffinityLevel);
+                Log.d(PTAG, "PENGUIN_ADULT load successful");
+                break;
+            case Spirits.PANDA_ADULT_REG:
+                GameService.UserSpirit = new Panda_Adult(restoredStepCount, restoredStartTime, restoredEndTime, restoredAffinityLevel);
+                Log.d(PTAG, "PANDA_ADULT load successful");
+                break;
+            default:
+                Log.d(PTAG, "No spirit detected");
         }
+    }
+
+    boolean doubleBackToExitPressedOnce = false;
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
     }
 }

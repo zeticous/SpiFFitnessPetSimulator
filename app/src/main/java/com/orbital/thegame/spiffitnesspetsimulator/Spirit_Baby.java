@@ -10,11 +10,20 @@ public class Spirit_Baby extends Spirits {
     public Spirit_Baby(int affinityLevel) {
         super();
         setAffinityLevel(affinityLevel);
+        spirit_baby_start();
+    }
+
+    public Spirit_Baby(int stepCount, long startTime, long endTime, int affinityLevel){
+        super(stepCount,startTime,endTime,affinityLevel);
+        spirit_baby_start();
+    }
+
+    public void spirit_baby_start(){
         setStartTime(cal.getTimeInMillis());
         cal.add(Calendar.DAY_OF_WEEK, 7);
         setEndTime(cal.getTimeInMillis());
-    }
 
+    }
 
     public void runCheck() {
         Calendar cal = Calendar.getInstance();

@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -15,6 +16,7 @@ public class GameService extends Service {
     private final static String LOG = "GameService";
     public static Spirits UserSpirit;
     int stepCount;
+    public static final String MY_PREFS_NAME = "MyPrefsFile";
 
     private JSONSerializer mSerializer;
 
@@ -23,6 +25,8 @@ public class GameService extends Service {
     private IntentFilter intentFilter = new IntentFilter(ALARM_RECEIVE);
 
     AlarmReceiver alarmManager;
+
+    public final static String PTAG = "SharedPref";
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -72,6 +76,8 @@ public class GameService extends Service {
         Intent service = new Intent(this, GoogleFitSync.class);
         service.putExtra(GoogleFitSync.TYPE_REQUEST_CONNECTION, GoogleFitSync.TYPE_TRUE);
         service.putExtra(GoogleFitSync.TYPE_GET_STEP_DATA, GoogleFitSync.TYPE_TRUE);
+        service.putExtra("spiritStartTime", UserSpirit.getStartTime());
+        service.putExtra("spiritEndTime", UserSpirit.getEndTime());
         startService(service);
     }
 
@@ -109,11 +115,15 @@ public class GameService extends Service {
     }
 
     public void saveSpirits(){
-        try{
-            mSerializer.save(UserSpirit);
-            Log.e("JSON", "Saved successfully");
-        }catch(Exception e){
-            Log.e("JSON", "Error Saving notes");
-        }
+        SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+        editor.putInt("stepCount", UserSpirit.getStepCount());
+        editor.putInt("register", UserSpirit.getRegister());
+        editor.putInt("affinityLevel", UserSpirit.getAffinityLevel());
+
+        editor.putLong("startTime", UserSpirit.getStartTime());
+        editor.putLong("endTime", UserSpirit.getEndTime());
+
+        editor.commit();
+        Log.d(PTAG, "Shared Preference saved");
     }
 }

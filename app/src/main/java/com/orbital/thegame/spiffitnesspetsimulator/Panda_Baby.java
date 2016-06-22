@@ -5,31 +5,21 @@ package com.orbital.thegame.spiffitnesspetsimulator;
  */
 public class Panda_Baby extends Spirit_Baby {
 
-    private int image_idle1 = R.drawable.panda_baby_idle1;
-    private int image_idle2 = R.drawable.panda_baby_idle2;
-    private int image_happy1 = R.drawable.panda_baby_happy1;
-    private int image_happy2 = R.drawable.panda_baby_happy2;
-
     private int minimumAffinity = 30;
-
-    public int getImage_idle1() {
-        return image_idle1;
-    }
-
-    public int getImage_idle2() {
-        return image_idle2;
-    }
-
-    public int getImage_happy2() {
-        return image_happy2;
-    }
-
-    public int getImage_happy1() {
-        return image_happy1;
-    }
 
     public Panda_Baby(int affinityLevel) {
         super(affinityLevel);
+        setImage_idle1(R.drawable.panda_baby_idle1);
+        setImage_idle2(R.drawable.panda_baby_idle2);
+        setImage_happy1(R.drawable.panda_baby_happy1);
+        setImage_happy2(R.drawable.panda_baby_happy2);
+        setName("pandaBaby");
+        setRegister(PANDA_BABY_REG);
+    }
+
+    public Panda_Baby(int stepCount, long startTime, long endTime, int affinityLevel){
+        super(stepCount, startTime, endTime, affinityLevel);
+        setRegister(PANDA_BABY_REG);
     }
 
     @Override

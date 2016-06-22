@@ -5,16 +5,67 @@ import java.util.Date;
 
 public class Spirits {
 
-    public int image_idle1;
-    public int image_idle2;
-    public int image_happy1;
-    public int image_happy2;
+    public static final int EGG_REG = 10000;
+    public static final int PIG_BABY_REG = 10001;
+    public static final int PIG_ADULT_REG = 10002;
+    public static final int PENGUIN_BABY_REG = 10003;
+    public static final int PENGUIN_ADULT_REG = 10004;
+    public static final int PANDA_BABY_REG = 10005;
+    public static final int PANDA_ADULT_REG = 10006;
+
+    private int image_idle1;
+    private int image_idle2;
+    private int image_happy1;
+    private int image_happy2;
+
+    public int getImage_happy1() {
+        return image_happy1;
+    }
+
+    public void setImage_happy1(int image_happy1) {
+        this.image_happy1 = image_happy1;
+    }
+
+    public int getImage_idle2() {
+        return image_idle2;
+    }
+
+    public void setImage_idle2(int image_idle2) {
+        this.image_idle2 = image_idle2;
+    }
+
+    public int getImage_idle1() {
+        return image_idle1;
+    }
+
+    public void setImage_idle1(int image_idle1) {
+        this.image_idle1 = image_idle1;
+    }
+
+    public int getImage_happy2() {
+        return image_happy2;
+    }
+
+    public void setImage_happy2(int image_happy2) {
+        this.image_happy2 = image_happy2;
+    }
 
     protected int stepCount;
     protected int affinityLevel;
     protected int affinityPoint;
     protected long startTime, endTime;
     protected boolean isAdult = false;
+    private int register = 99999;
+
+    public int getRegister() {
+        return register;
+    }
+
+    public void setRegister(int register) {
+        this.register = register;
+    }
+
+    protected String name;
 
     private JSONSerializer mSerializer;
 
@@ -25,7 +76,22 @@ public class Spirits {
         Date now = new Date();
         this.cal.setTime(now);
         setStepCount(0);
-        setAffinityPoint(0);
+        setAffinityLevel(0);
+    }
+
+    public Spirits(int stepCount, long startTime, long endTime, int affinityLevel){
+        setStepCount(stepCount);
+        setAffinityLevel(affinityLevel);
+        setStartTime(startTime);
+        setEndTime(endTime);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getAffinityPoint() {

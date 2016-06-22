@@ -21,8 +21,6 @@ import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.request.DataReadRequest;
 import com.google.android.gms.fitness.result.DataReadResult;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -100,6 +98,9 @@ public class GoogleFitSync extends IntentService {
         boolean connectionStatusRequest = intent.getBooleanExtra(TYPE_REQUEST_CONNECTION, false);
         boolean stepDataRequest = intent.getBooleanExtra(TYPE_GET_STEP_DATA, false);
 
+        long startTime = intent.getLongExtra("spiritStartTime", 100000);
+        long endTime = intent.getLongExtra("spiritEndTime", 99999999);
+
         if (connectionStatusRequest){
             if (!mGoogleApiFitnessClient.isConnected()){
                 mTryingToConnect=true;
@@ -119,26 +120,22 @@ public class GoogleFitSync extends IntentService {
         if (stepDataRequest){
             if(mGoogleApiFitnessClient.isConnected()){
                 Log.d(TAG,"Requesting step count from Google Fit");
-                getSteps();
+                getSteps(startTime,endTime);
             }
             else
                 Log.e(TAG, "Fit not connected");
         }
     }
 
-    private void getSteps(){
-        Calendar cal = Calendar.getInstance();
-        Date now = new Date();
-        cal.setTime(now);
-        long endTime = cal.getTimeInMillis();
-        cal.add(Calendar.DAY_OF_YEAR, -3);
-        long startTime = cal.getTimeInMillis();
-
+    private void getSteps(long startTime, long endTime){
         DataReadRequest readRequest = new DataReadRequest.Builder()
                 .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
                 .bucketByTime(1, TimeUnit.DAYS)
                 .setTimeRange(startTime,endTime,TimeUnit.MILLISECONDS)
                 .build();
+
+        Log.d(TAG, "START TIME IN LONG: " + startTime);
+        Log.d(TAG, "END TIME IN LONG: " + endTime);
 
         DataReadResult dataResult = Fitness
                 .HistoryApi.readData(mGoogleApiFitnessClient,readRequest)
