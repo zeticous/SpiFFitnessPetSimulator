@@ -1,9 +1,5 @@
 package com.orbital.thegame.spiffitnesspetsimulator;
 
-/**
- * Created by Qi Wei on 13/6/2016.
- */
-
 public class Panda_Adult extends Spirit_Adult {
     private final int MINIMUM = 20;
 
@@ -18,10 +14,8 @@ public class Panda_Adult extends Spirit_Adult {
     }
 
     private void startConstructor(){
-        setImage_idle1(R.drawable.panda_adult_idle1);
-        setImage_idle2(R.drawable.panda_adult_idle2);
-        setImage_happy1(R.drawable.panda_adult_happy1);
-        setImage_happy2(R.drawable.panda_adult_happy2);
+        setAnimation_idle(R.drawable.panda_adult_idle);
+        setAnimation_happy(R.drawable.panda_adult_happy);
         setName("pandaAdult");
         setRegister(PANDA_ADULT_REG);
         setMinimumAffinity(MINIMUM);

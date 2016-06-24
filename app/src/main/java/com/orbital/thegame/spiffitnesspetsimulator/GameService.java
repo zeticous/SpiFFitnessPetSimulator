@@ -48,13 +48,12 @@ public class GameService extends Service {
         @Override
         public void onReceive (Context context, Intent intent){
             requestGoogleFitSync();
-            updateAffinityPoint();
-
             int affinityLevel = UserSpirit.getAffinityLevel();
 
             if (UserSpirit.evolveCheck(affinityLevel)){
                 UserSpirit = UserSpirit.evolve(affinityLevel);
-                updateAffinityPoint();
+                register();
+                requestGoogleFitSync();
             }
 
             if (UserSpirit.runCheck()){
@@ -84,6 +83,30 @@ public class GameService extends Service {
         Log.d("GAMESERVICE", "AffinityPoint: " + affinityPoint);*/
 
         UserSpirit.setAffinityPoint(affinityPoint);
+    }
+
+    private void register(){
+        SharedPreferences settings = getSharedPreferences("GameSettings", 0);
+        switch(UserSpirit.getRegister()){
+            case Spirits.PIG_BABY_REG:
+                settings.edit().putBoolean("pigBaby", true).apply();
+                break;
+            case Spirits.PENGUIN_BABY_REG:
+                settings.edit().putBoolean("penguinBaby", true).apply();
+                break;
+            case Spirits.PANDA_BABY_REG:
+                settings.edit().putBoolean("pandaBaby", true).apply();
+                break;
+            case Spirits.PIG_ADULT_REG:
+                settings.edit().putBoolean("pigAdult", true).apply();
+                break;
+            case Spirits.PENGUIN_ADULT_REG:
+                settings.edit().putBoolean("penguinAdult", true).apply();
+                break;
+            case Spirits.PANDA_ADULT_REG:
+                settings.edit().putBoolean("pandaAdult", true).apply();
+                break;
+        }
     }
 
     public void requestGoogleFitSync() {

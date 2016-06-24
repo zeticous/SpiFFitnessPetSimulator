@@ -1,5 +1,7 @@
 package com.orbital.thegame.spiffitnesspetsimulator;
 
+import android.util.Log;
+
 /**
  * Created by Qi Wei on 13/6/2016.
  */
@@ -17,13 +19,21 @@ public class Penguin_Baby extends Spirit_Baby {
     }
 
     private void startConstructor(){
-        setImage_idle1(R.drawable.penguin_baby_idle1);
-        setImage_idle2(R.drawable.penguin_baby_idle2);
-        setImage_happy1(R.drawable.penguin_baby_happy1);
-        setImage_happy2(R.drawable.penguin_baby_happy2);
+        setAnimation_idle(R.drawable.penguin_baby_idle);
+        setAnimation_happy(R.drawable.penguin_baby_happy);
         setName("penguinBaby");
         setRegister(PENGUIN_BABY_REG);
         setMinimumAffinity(MINIMUM);
+    }
+
+    @Override
+    public boolean evolveCheck(int affinityLevel) {
+        Log.d("Evolve","Checking");
+        Spirits reference = new Penguin_Adult();
+        if(reference.check(affinityLevel)) {
+            return true;
+        }
+        return false;
     }
 
     @Override

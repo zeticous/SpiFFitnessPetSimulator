@@ -1,5 +1,7 @@
 package com.orbital.thegame.spiffitnesspetsimulator;
 
+import android.util.Log;
+
 /**
  * Created by Qi Wei on 13/6/2016.
  */
@@ -18,13 +20,21 @@ public class Pig_Baby extends Spirit_Baby{
     }
 
     private void startConstructor(){
-        setImage_idle1(R.drawable.pig_baby_idle1);
-        setImage_idle2(R.drawable.pig_baby_idle2);
-        setImage_happy1(R.drawable.pig_baby_happy1);
-        setImage_happy2(R.drawable.pig_baby_happy2);
+        setAnimation_idle(R.drawable.pig_baby_idle);
+        setAnimation_happy(R.drawable.pig_baby_happy);
         setName("pigBaby");
         setRegister(PIG_BABY_REG);
         setMinimumAffinity(MINIMUM);
+    }
+
+    @Override
+    public boolean evolveCheck(int affinityLevel) {
+        Log.d("Evolve","Checking");
+        Spirits reference = new Pig_Adult();
+        if(reference.check(affinityLevel)) {
+            return true;
+        }
+        return false;
     }
 
     @Override

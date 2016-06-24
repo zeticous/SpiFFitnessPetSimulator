@@ -21,14 +21,6 @@ public class Spirit_Baby extends Spirits {
     }
 
     @Override
-    public boolean evolveCheck(int affinityLevel) {
-        if(check(affinityLevel)) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
     public boolean runCheck() {
         Calendar cal = Calendar.getInstance();
         Date now = new Date();

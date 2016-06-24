@@ -1,9 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/activity_horizontal_margin"
+    android:background="#000000"
     tools:context="com.orbital.thegame.spiffitnesspetsimulator.RecordsActivity">
 
-</LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="48sp"
+        android:text="Collections"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:textStyle="italic"
+        android:id="@+id/collections_header"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/collections_header"
+        android:id="@+id/baby_gallery">
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_weight="1"
+            android:src="@drawable/pig_baby_idle1"
+            android:id="@+id/baby_gallery_pig"/>
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_weight="1"
+            android:src="@drawable/penguin_baby_idle1"
+            android:id="@+id/baby_gallery_penguin"/>
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_weight="1"
+            android:src="@drawable/panda_baby_idle1"
+            android:id="@+id/baby_gallery_panda"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/adult_gallery"
+        android:layout_below="@id/baby_gallery">
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_weight="1"
+            android:src="@drawable/pig_adult_idle1"
+            android:id="@+id/adult_gallery_pig"/>
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_weight="1"
+            android:src="@drawable/penguin_adult_idle1"
+            android:id="@+id/adult_gallery_penguin"/>
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:layout_weight="1"
+            android:src="@drawable/panda_adult_idle1"
+            android:id="@+id/adult_gallery_panda"/>
+    </LinearLayout>
+
+
+</RelativeLayout>

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -14,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity{
     public final static String PTAG = "SharedPref";
     public static final String MY_PREFS_NAME = "MyPrefsFile";
 
-    public final static String MAIN_ALARM = "com.orbital.thegame.spiffitnesspetsimulator.mainactivity.alarmreceiver";
+    private AnimationDrawable animation_idle, animation_happy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +66,6 @@ public class MainActivity extends AppCompatActivity{
         final TextView levelCount = (TextView) findViewById(R.id.level_count);
         final TextView affinityPointCount = (TextView) findViewById(R.id.experience);
 
-        changeImage(sprite, GameService.UserSpirit.getImage_idle1());
         changeText(levelCount, "" + affinityLevel);
         changeText(affinityPointCount, "" + affinityPoint);
 
@@ -80,12 +79,24 @@ public class MainActivity extends AppCompatActivity{
                     GameService.UserSpirit.setAffinityLevel(++affinityLevel);
                     GameService.UserSpirit.setAffinityPoint(--affinityPoint);
 
-                    Log.d(TAG,"START TIME IN LONG: "+ GameService.UserSpirit.getStartTime());
-                    Log.d(TAG,"END TIME IN LONG: "+GameService.UserSpirit.getEndTime());
+                    /*Log.d(TAG,"START TIME IN LONG: "+ GameService.UserSpirit.getStartTime());
+                    Log.d(TAG,"END TIME IN LONG: "+GameService.UserSpirit.getEndTime());*/
                 }
 
+                startHappyAnimation();
                 changeText(levelCount, "" + GameService.UserSpirit.getAffinityLevel());
                 changeText(affinityPointCount, "" + GameService.UserSpirit.getAffinityPoint());
+
+
+                long delay = 5000;
+
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        startIdleAnimation();
+                    }
+                },delay);
             }
         });
 
@@ -110,7 +121,14 @@ public class MainActivity extends AppCompatActivity{
 
         Intent intent = new Intent(this, GameService.class);
         startService(intent);
+    }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        startIdleAnimation();
+
+        // This portion of the code updates the MainActivity every second.
         Thread t = new Thread() {
 
             @Override
@@ -131,9 +149,9 @@ public class MainActivity extends AppCompatActivity{
                                 int affinityLevel = GameService.UserSpirit.getAffinityLevel();
                                 int affinityPoint = GameService.UserSpirit.getAffinityPoint();
 
+                                startIdleAnimation();
                                 changeText(levelCount, ""+ affinityLevel);
                                 changeText(affinityPointCount, "" + affinityPoint);
-                                changeImage(sprite, GameService.UserSpirit.getImage_idle1());
                             }
                         });
                     }
@@ -144,10 +162,24 @@ public class MainActivity extends AppCompatActivity{
         };
 
         t.start();
+
     }
 
-    private void changeImage(ImageView view, int drawable){
-        view.setImageResource(drawable);
+    private void startIdleAnimation(){
+        ImageButton sprite = (ImageButton) findViewById(R.id.sprite);
+        sprite.setImageResource(GameService.UserSpirit.getAnimation_idle());
+
+        animation_idle = (AnimationDrawable) sprite.getDrawable();
+        animation_idle.start();
+    }
+
+    private void startHappyAnimation(){
+        ImageButton sprite = (ImageButton) findViewById(R.id.sprite);
+        sprite.setImageResource(GameService.UserSpirit.getAnimation_happy());
+
+        animation_happy = (AnimationDrawable) sprite.getDrawable();
+        animation_happy.start();
+
     }
 
     private void changeText(TextView view, String string){

@@ -11,7 +11,7 @@ public class Egg extends Spirits{
         super();
         startConstructor();
         setStartTime(cal.getTimeInMillis());
-        cal.add(Calendar.MINUTE, 1);
+        cal.add(Calendar.MINUTE, 2);
         setEndTime(cal.getTimeInMillis());
     }
 
@@ -21,10 +21,8 @@ public class Egg extends Spirits{
     }
 
     private void startConstructor(){
-        setImage_idle1(R.drawable.egg_idle1);
-        setImage_idle2(R.drawable.egg_idle2);
-        setImage_happy1(R.drawable.egg_happy1);
-        setImage_happy2(R.drawable.egg_happy2);
+        setAnimation_idle(R.drawable.egg_idle);
+        setAnimation_happy(R.drawable.egg_happy);
         setRegister(EGG_REG);
         setName("Egg");
     }

@@ -16,41 +16,24 @@ public class Spirits {
     public static final int PANDA_BABY_REG = 10005;
     public static final int PANDA_ADULT_REG = 10006;
 
-    private int image_idle1;
-    private int image_idle2;
-    private int image_happy1;
-    private int image_happy2;
-    
-    public int getImage_happy1() {
-        return image_happy1;
+
+    private int animation_idle;
+    private int animation_happy;
+
+    public int getAnimation_idle() {
+        return animation_idle;
     }
 
-    public void setImage_happy1(int image_happy1) {
-        this.image_happy1 = image_happy1;
+    public void setAnimation_idle(int animation_idle) {
+        this.animation_idle = animation_idle;
     }
 
-    public int getImage_idle2() {
-        return image_idle2;
+    public int getAnimation_happy() {
+        return animation_happy;
     }
 
-    public void setImage_idle2(int image_idle2) {
-        this.image_idle2 = image_idle2;
-    }
-
-    public int getImage_idle1() {
-        return image_idle1;
-    }
-
-    public void setImage_idle1(int image_idle1) {
-        this.image_idle1 = image_idle1;
-    }
-
-    public int getImage_happy2() {
-        return image_happy2;
-    }
-
-    public void setImage_happy2(int image_happy2) {
-        this.image_happy2 = image_happy2;
+    public void setAnimation_happy(int animation_happy) {
+        this.animation_happy = animation_happy;
     }
 
     protected int stepCount;

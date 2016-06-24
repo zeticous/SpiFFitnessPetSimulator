@@ -15,6 +15,7 @@ public class Spirit_Adult extends Spirits {
 
     public Spirit_Adult(int stepCount, long startTime, long endTime, int affinityLevel){
         super(stepCount,startTime,endTime,affinityLevel);
+        isAdult = true;
         setStartTime(startTime);
         setEndTime(endTime);
         setAffinityLevel(affinityLevel);

@@ -1,5 +1,7 @@
 package com.orbital.thegame.spiffitnesspetsimulator;
 
+import android.util.Log;
+
 /**
  * Created by Esmond on 9/6/2016.
  */
@@ -17,13 +19,21 @@ public class Panda_Baby extends Spirit_Baby {
     }
 
     private void startConstructor(){
-        setImage_idle1(R.drawable.panda_baby_idle1);
-        setImage_idle2(R.drawable.panda_baby_idle2);
-        setImage_happy1(R.drawable.panda_baby_happy1);
-        setImage_happy2(R.drawable.panda_baby_happy2);
+        setAnimation_idle(R.drawable.panda_baby_idle);
+        setAnimation_happy(R.drawable.panda_baby_happy);
         setName("pandaBaby");
         setRegister(PANDA_BABY_REG);
         setMinimumAffinity(MINIMUM);
+    }
+
+    @Override
+    public boolean evolveCheck(int affinityLevel) {
+        Log.d("Evolve","Checking");
+        Spirits reference = new Panda_Adult();
+        if(reference.check(affinityLevel)) {
+            return true;
+        }
+        return false;
     }
 
     @Override

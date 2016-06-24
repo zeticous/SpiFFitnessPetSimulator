@@ -1,5 +1,6 @@
 package com.orbital.thegame.spiffitnesspetsimulator;
 
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -16,13 +17,11 @@ public class MenuActivity extends AppCompatActivity {
 
         TextView expCount = (TextView) findViewById(R.id.maxExp);
         TextView speciesName = (TextView) findViewById(R.id.species_name);
-        ImageView menu_icon = (ImageView) findViewById(R.id.spiritIcon);
         Button releaseButton = (Button) findViewById(R.id.release_button);
 
 
         assert expCount != null;
         assert speciesName != null;
-        assert menu_icon != null;
         assert releaseButton != null;
 
         if (!GameService.UserSpirit.isAdult){
@@ -39,7 +38,20 @@ public class MenuActivity extends AppCompatActivity {
         expCount.setText(TEXT);
 
         speciesName.setText(GameService.UserSpirit.getName());
-        menu_icon.setImageResource(GameService.UserSpirit.getImage_idle1());
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        startIdleAnimation();
+    }
+
+    private void startIdleAnimation(){
+        ImageView menu_icon = (ImageView) findViewById(R.id.spiritIcon);
+        menu_icon.setImageResource(GameService.UserSpirit.getAnimation_idle());
+
+        AnimationDrawable animation_idle = (AnimationDrawable) menu_icon.getDrawable();
+        animation_idle.start();
     }
 
     @Override
