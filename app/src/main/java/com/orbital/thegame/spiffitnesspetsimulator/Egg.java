@@ -5,26 +5,22 @@ import android.util.Log;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * Created by Esmond on 9/6/2016.
- */
 public class Egg extends Spirits{
 
     public Egg(){
         super();
-        egg_start();
+        startConstructor();
         setStartTime(cal.getTimeInMillis());
-        cal.add(Calendar.MINUTE, 5);
+        cal.add(Calendar.MINUTE, 1);
         setEndTime(cal.getTimeInMillis());
-        setAffinityLevel(0);
     }
 
     public Egg(int stepCount, long startTime, long endTime, int affinityLevel){
         super(stepCount,startTime,endTime,affinityLevel);
-        egg_start();
+        startConstructor();
     }
 
-    private void egg_start(){
+    private void startConstructor(){
         setImage_idle1(R.drawable.egg_idle1);
         setImage_idle2(R.drawable.egg_idle2);
         setImage_happy1(R.drawable.egg_happy1);
@@ -34,28 +30,32 @@ public class Egg extends Spirits{
     }
 
     @Override
-    public Spirits evolveCheck(int affinityLevel){
+    public boolean evolveCheck(int affinityLevel){
         Log.d("EGG", "RUNNING EVOLVE CHECK");
         Calendar cal = Calendar.getInstance();
         Date now = new Date();
         cal.setTime(now);
 
         if (cal.getTimeInMillis() > getEndTime()){
-            return evolve(affinityLevel);
+            return true;
         }
-        return null;
+        return false;
     }
 
+    @Override
     public Spirits evolve(int affinityLevel){
         Spirits reference = new Panda_Baby();
         if (reference.check(affinityLevel)){
+            Log.d("Evolve","PandaBaby");
             return new Panda_Baby();
         }
         reference = new Penguin_Baby();
         if (reference.check(affinityLevel)){
+            Log.d("Evolve","PenguinBaby");
             return new Penguin_Baby();
         }
         else {
+            Log.d("Evolve","PigBaby");
             return new Pig_Baby();
         }
     }

@@ -47,17 +47,21 @@ public class GameService extends Service {
 
         @Override
         public void onReceive (Context context, Intent intent){
-            Log.d(TAG, "STARTED: onReceive");
-
-            updateAffinityPoint();
             requestGoogleFitSync();
+            updateAffinityPoint();
 
             int affinityLevel = UserSpirit.getAffinityLevel();
-            if (UserSpirit.evolveCheck(affinityLevel)!=null){
-                UserSpirit = UserSpirit.evolveCheck(affinityLevel);
-            }
-            saveSpirits();
 
+            if (UserSpirit.evolveCheck(affinityLevel)){
+                UserSpirit = UserSpirit.evolve(affinityLevel);
+                updateAffinityPoint();
+            }
+
+            if (UserSpirit.runCheck()){
+                UserSpirit = UserSpirit.initialise();
+            }
+
+            saveSpirits();
         }
 
         public void setAlarm(Context context){
@@ -66,7 +70,7 @@ public class GameService extends Service {
             AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             Intent intent = new Intent (ALARM_RECEIVE);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0,intent,0);
-            alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000*60, pendingIntent);
+            alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000*30, pendingIntent);
         }
     }
 
@@ -75,9 +79,10 @@ public class GameService extends Service {
         int stepCount = UserSpirit.getStepCount();
         int affinityPoint = (stepCount - FACTOR*affinityLevel)/FACTOR;
 
-        Log.d("GAMESERVICE", "AffinityLevel: " + affinityLevel);
+        /*Log.d("GAMESERVICE", "AffinityLevel: " + affinityLevel);
         Log.d("GAMESERVICE", "StepCount: " + stepCount);
-        Log.d("GAMESERVICE", "AffinityPoint: " + affinityPoint);
+        Log.d("GAMESERVICE", "AffinityPoint: " + affinityPoint);*/
+
         UserSpirit.setAffinityPoint(affinityPoint);
     }
 
@@ -100,16 +105,7 @@ public class GameService extends Service {
             Log.d(TAG, "Executing Connection onReceive");
             if (intent.hasExtra(GoogleFitSync.FIT_EXTRA_NOTIFY_FAILED_STATUS_CODE) &&
                     intent.hasExtra(GoogleFitSync.FIT_EXTRA_NOTIFY_FAILED_STATUS_CODE)) {
-                int errorCode = intent.getIntExtra(GoogleFitSync.FIT_EXTRA_NOTIFY_FAILED_STATUS_CODE, 0);
-                PendingIntent pendingIntent = intent.getParcelableExtra(GoogleFitSync.FIT_EXTRA_NOTIFY_FAILED_INTENT);
-
-                Intent resolution = new Intent();
-                intent.putExtra("PENDING_INTENT", pendingIntent);
-                intent.putExtra("ERROR_CODE", errorCode);
-                intent.putExtra("REQUEST_RESOLUTION", true);
-                Log.d(TAG, "Fit connection failed - opening connect screen.");
-
-                sendBroadcast(resolution);
+                Log.e(TAG, "Unable to Connect to Google Fit. Please start the application again.");
             }
             if (intent.hasExtra(GoogleFitSync.FIT_EXTRA_CONNECTION_MESSAGE)) {
                 Log.d(TAG, "Fit connection successful - closing connect screen if it's open.");
@@ -117,7 +113,7 @@ public class GameService extends Service {
             }
             if (intent.hasExtra(GoogleFitSync.STEP_COUNT)) {
                 stepCount = intent.getIntExtra(GoogleFitSync.STEP_COUNT, 0);
-                Log.e(TAG, "Broadcast Value: " + stepCount);
+                //Log.e(TAG, "Broadcast Value: " + stepCount);
                 UserSpirit.setStepCount(stepCount);
                 saveSpirits();
             }

@@ -20,7 +20,7 @@ public class Spirits {
     private int image_idle2;
     private int image_happy1;
     private int image_happy2;
-
+    
     public int getImage_happy1() {
         return image_happy1;
     }
@@ -74,12 +74,12 @@ public class Spirits {
     public Calendar cal;
 
     public Spirits(){
-        this.cal = Calendar.getInstance();
-        Date now = new Date();
-        this.cal.setTime(now);
         setStepCount(0);
         setAffinityLevel(0);
         setAffinityPoint(0);
+        this.cal = Calendar.getInstance();
+        Date now = new Date();
+        this.cal.setTime(now);
     }
 
     public Spirits(int stepCount, long startTime, long endTime, int affinityLevel){
@@ -145,11 +145,23 @@ public class Spirits {
         this.minimumAffinity = minimumAffinity;
     }
 
-    public Spirits evolveCheck(int affinityLevel) {
+    public boolean evolveCheck(int affinityLevel) {
+        return false;
+    }
+
+    public Spirits evolve(int affinityLevel){
         return null;
     }
 
     public boolean check(int affinityLevel){
         return affinityLevel > getMinimumAffinity();
+    }
+
+    public Spirits initialise(){
+        return new Egg();
+    }
+
+    public boolean runCheck(){
+        return false;
     }
 }

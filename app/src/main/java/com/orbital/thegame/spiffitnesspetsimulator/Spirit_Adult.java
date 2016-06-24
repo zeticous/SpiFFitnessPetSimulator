@@ -1,17 +1,15 @@
 package com.orbital.thegame.spiffitnesspetsimulator;
 
 import java.util.Calendar;
+import java.util.Date;
 
-/**
- * Created by Qi Wei on 14/6/2016.
- */
 public class Spirit_Adult extends Spirits {
 
     public Spirit_Adult() {
         super();
         isAdult = true;
         setStartTime(cal.getTimeInMillis());
-        cal.add(Calendar.DAY_OF_WEEK, 99);
+        cal.add(Calendar.DAY_OF_WEEK, 7);
         setEndTime(cal.getTimeInMillis());
     }
 
@@ -23,7 +21,15 @@ public class Spirit_Adult extends Spirits {
         setStepCount(stepCount);
     }
 
-    public Spirits releaseSpirit(){
-        return new Egg();
+    @Override
+    public boolean runCheck() {
+        Calendar cal = Calendar.getInstance();
+        Date now = new Date();
+        cal.setTime(now);
+
+        if (cal.getTimeInMillis() > getEndTime()) {
+            return true;
+        }
+        return false;
     }
 }

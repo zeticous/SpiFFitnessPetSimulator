@@ -130,12 +130,12 @@ public class GoogleFitSync extends IntentService {
     private void getSteps(long startTime, long endTime){
         DataReadRequest readRequest = new DataReadRequest.Builder()
                 .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
-                .bucketByTime(1, TimeUnit.DAYS)
+                .bucketByTime(7, TimeUnit.DAYS)
                 .setTimeRange(startTime,endTime,TimeUnit.MILLISECONDS)
                 .build();
 
-        Log.d(TAG, "START TIME IN LONG: " + startTime);
-        Log.d(TAG, "END TIME IN LONG: " + endTime);
+        /*Log.d(TAG, "START TIME IN LONG: " + startTime);
+        Log.d(TAG, "END TIME IN LONG: " + endTime);*/
 
         DataReadResult dataResult = Fitness
                 .HistoryApi.readData(mGoogleApiFitnessClient,readRequest)
@@ -164,9 +164,9 @@ public class GoogleFitSync extends IntentService {
                 steps += dp.getValue(field).asInt();
             }
         }
-        Log.e(TAG, "Value: "+steps);
+        //Log.e(TAG, "Value: "+steps);
         sendSteps(steps);
-        Log.d(TAG, "Retrieval Successful, terminating Google Fit");
+        //Log.d(TAG, "Retrieval Successful, terminating Google Fit");
     }
 
     private void notifyConnected(){

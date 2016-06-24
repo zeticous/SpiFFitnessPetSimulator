@@ -66,11 +66,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/maxExp"
-            android:text="5000"
+            android:text="TheGame"
             android:textSize="40sp"
             android:textColor="@android:color/white"
             android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:singleLine="true"/>
 
     </RelativeLayout>
 
@@ -96,14 +97,12 @@
         android:layout_marginBottom="16dp"
         android:textSize="24sp" />
 
-    <Switch
+    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Bluetooth"
-        android:id="@+id/bluetooth_switch"
-        android:textColor="@android:color/white"
-        android:thumbTint="@android:color/white"
-        android:textSize="24sp" />
+        android:text="RELEASE"
+        android:id="@+id/release_button"
+        />
 
 
 </LinearLayout>

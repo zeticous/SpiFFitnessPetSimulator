@@ -5,27 +5,24 @@ package com.orbital.thegame.spiffitnesspetsimulator;
  */
 public class Pig_Adult extends Spirit_Adult {
 
-    private int minimumAffinity = 20;
+    private int MINIMUM = 20;
 
     public Pig_Adult() {
         super();
-        setImage_idle1(R.drawable.pig_adult_idle1);
-        setImage_idle2(R.drawable.pig_adult_idle2);
-        setImage_happy1(R.drawable.pig_adult_happy1);
-        setImage_happy2(R.drawable.pig_adult_happy2);
-        setRegister(PIG_ADULT_REG);
+        startConstructor();
     }
     public Pig_Adult(int stepCount, long startTime, long endTime, int affinityLevel){
         super(stepCount,startTime,endTime,affinityLevel);
+        startConstructor();
+    }
+
+    private void startConstructor(){
         setImage_idle1(R.drawable.pig_adult_idle1);
         setImage_idle2(R.drawable.pig_adult_idle2);
         setImage_happy1(R.drawable.pig_adult_happy1);
         setImage_happy2(R.drawable.pig_adult_happy2);
-        setRegister(PIG_ADULT_REG);
         setName("pigAdult");
-    }
-
-    public boolean check(int affinityLevel){
-        return affinityLevel > minimumAffinity;
+        setRegister(PIG_ADULT_REG);
+        setMinimumAffinity(MINIMUM);
     }
 }

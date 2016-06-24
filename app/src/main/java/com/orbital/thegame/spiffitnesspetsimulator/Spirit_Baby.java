@@ -16,19 +16,27 @@ public class Spirit_Baby extends Spirits {
         setStartTime(startTime);
         setEndTime(endTime);
         setAffinityLevel(affinityLevel);
+        setAffinityPoint(0);
         setStepCount(stepCount);
     }
 
-    public void runCheck() {
+    @Override
+    public boolean evolveCheck(int affinityLevel) {
+        if(check(affinityLevel)) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean runCheck() {
         Calendar cal = Calendar.getInstance();
         Date now = new Date();
         cal.setTime(now);
 
         if (cal.getTimeInMillis() > getEndTime()) {
-            runAway();
+            return true;
         }
-    }
-    public Spirits runAway() {
-        return new Egg();
+        return false;
     }
 }
