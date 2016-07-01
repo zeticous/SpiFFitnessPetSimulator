@@ -11,11 +11,15 @@ import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.fitness.Fitness;
+import com.google.android.gms.fitness.FitnessStatusCodes;
 import com.google.android.gms.fitness.data.Bucket;
 import com.google.android.gms.fitness.data.DataPoint;
 import com.google.android.gms.fitness.data.DataSet;
+import com.google.android.gms.fitness.data.DataSource;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.request.DataReadRequest;
@@ -34,6 +38,7 @@ public class GoogleFitSync extends IntentService {
 
     public static final String TYPE_GET_STEP_DATA = "getStepData";
     public static final String TYPE_REQUEST_CONNECTION = "requestConnection";
+    public static final String TYPE_REQUEST_BLUETOOTH = "requestBluetooth";
 
     public static final String STEP_COUNT = "stepCount";
     public static final String FIT_NOTIFY_INTENT = "fitStatusUpdateIntent";
@@ -61,6 +66,7 @@ public class GoogleFitSync extends IntentService {
         mGoogleApiFitnessClient = new GoogleApiClient.Builder(this)
                 .addApi(Fitness.HISTORY_API)
                 .addApi(Fitness.RECORDING_API)
+                .addApi(Fitness.BLE_API)
                 .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
                 .addConnectionCallbacks(
                         new GoogleApiClient.ConnectionCallbacks() {
@@ -70,6 +76,7 @@ public class GoogleFitSync extends IntentService {
                                 mTryingToConnect=false;
                                 Log.i(TAG, "Broadcasting information");
                                 notifyConnected();
+                                subscribe();
                             }
 
                             @Override
@@ -87,10 +94,37 @@ public class GoogleFitSync extends IntentService {
                             }
                         }
                 ).build();
+
     }
 
     public GoogleFitSync(){
         super("GoogleFitService");
+    }
+
+    protected void subscribe(){
+        DataSource ESTIMATED_STEP_DELTAS = new DataSource.Builder()
+                .setDataType(DataType.TYPE_STEP_COUNT_DELTA)
+                .setType(DataSource.TYPE_DERIVED)
+                .setStreamName("estimated_steps")
+                .setAppPackageName("com.google.android.gms")
+                .build();
+
+        Fitness.RecordingApi.subscribe(mGoogleApiFitnessClient,ESTIMATED_STEP_DELTAS).setResultCallback(new ResultCallback<Status>() {
+            @Override
+            public void onResult(@NonNull Status status) {
+                if (status.isSuccess()){
+                    if(status.getStatusCode() == FitnessStatusCodes.SUCCESS_ALREADY_SUBSCRIBED){
+                        Log.i(TAG, "Subscription already existed");
+                    }
+                    else{
+                        Log.i(TAG, "Subscription successful");
+                    }
+                }
+                else {
+                    Log.e(TAG, "Subscription failed");
+                }
+            }
+        });
     }
 
     @Override
@@ -98,8 +132,8 @@ public class GoogleFitSync extends IntentService {
         boolean connectionStatusRequest = intent.getBooleanExtra(TYPE_REQUEST_CONNECTION, false);
         boolean stepDataRequest = intent.getBooleanExtra(TYPE_GET_STEP_DATA, false);
 
-        long startTime = intent.getLongExtra("spiritStartTime", 100000);
-        long endTime = intent.getLongExtra("spiritEndTime", 99999999);
+        long startTime = intent.getLongExtra("spiritStartTime", 1);
+        long endTime = intent.getLongExtra("spiritEndTime", 2);
 
         if (connectionStatusRequest){
             if (!mGoogleApiFitnessClient.isConnected()){
@@ -128,8 +162,15 @@ public class GoogleFitSync extends IntentService {
     }
 
     private void getSteps(long startTime, long endTime){
+        DataSource ESTIMATED_STEP_DELTAS = new DataSource.Builder()
+                .setDataType(DataType.TYPE_STEP_COUNT_DELTA)
+                .setType(DataSource.TYPE_DERIVED)
+                .setStreamName("estimated_steps")
+                .setAppPackageName("com.google.android.gms")
+                .build();
+
         DataReadRequest readRequest = new DataReadRequest.Builder()
-                .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
+                .aggregate(ESTIMATED_STEP_DELTAS, DataType.AGGREGATE_STEP_COUNT_DELTA)
                 .bucketByTime(7, TimeUnit.DAYS)
                 .setTimeRange(startTime,endTime,TimeUnit.MILLISECONDS)
                 .build();

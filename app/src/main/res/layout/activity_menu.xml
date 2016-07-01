@@ -97,6 +97,17 @@
         android:layout_marginBottom="16dp"
         android:textSize="24sp" />
 
+    <Switch
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bluetooth"
+        android:id="@+id/bluetooth_switch"
+        android:textColor="@android:color/white"
+        android:thumbTint="@android:color/white"
+        android:layout_marginBottom="16dp"
+        android:textSize="24sp"
+        android:enabled="false"/>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

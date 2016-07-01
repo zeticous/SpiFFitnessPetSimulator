@@ -36,11 +36,31 @@ public class Spirits {
         this.animation_happy = animation_happy;
     }
 
+    protected boolean firstBaby = false;
+    protected boolean firstAdult = false;
+
+    public boolean isFirstBaby() {
+        return firstBaby;
+    }
+
+    public void setFirstBaby(boolean firstBaby) {
+        this.firstBaby = firstBaby;
+    }
+
+    public boolean isFirstAdult() {
+        return firstAdult;
+    }
+
+    public void setFirstAdult(boolean firstAdult) {
+        this.firstAdult = firstAdult;
+    }
+
     protected int stepCount;
     protected int affinityLevel;
     protected int affinityPoint;
     protected long startTime, endTime;
     protected boolean isAdult = false;
+
     private int register = 99999;
     private int minimumAffinity;
 

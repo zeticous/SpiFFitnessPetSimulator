@@ -1,0 +1,30 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="com.orbital.thegame.spiffitnesspetsimulator.NavigationTutorial"
+                android:id="@+id/navigation_layout">
+
+    <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textSize="35sp"
+    android:text="Navigations"
+    android:textAllCaps="true"
+    android:textColor="@android:color/black"
+    android:textStyle="italic"
+    android:id="@+id/collections_header"
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true"
+    android:layout_gravity="top"/>
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/navigationView"
+        android:src="@drawable/navigation"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        />
+
+</RelativeLayout>

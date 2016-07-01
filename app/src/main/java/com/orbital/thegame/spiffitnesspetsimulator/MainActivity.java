@@ -1,5 +1,6 @@
 package com.orbital.thegame.spiffitnesspetsimulator;
 
+import android.app.FragmentManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -44,6 +45,13 @@ public class MainActivity extends AppCompatActivity{
             Log.d("Settings", "First Launch Detected");
             GameService.UserSpirit = new Egg();
 
+            //Fragment open up when first launch
+            FragmentManager fm = getFragmentManager();
+            NavigationPrompt navPrompt = new NavigationPrompt();
+            navPrompt.setRetainInstance(true);
+            navPrompt.show(fm, "fragment_name");
+
+
             if (GameService.UserSpirit.getRegister() == Spirits.EGG_REG) {
                 Log.e("FirstLaunch", "UserSpirit successfully created");
                 saveSpirits();
@@ -83,10 +91,11 @@ public class MainActivity extends AppCompatActivity{
                     Log.d(TAG,"END TIME IN LONG: "+GameService.UserSpirit.getEndTime());*/
                 }
 
+                stopAnimation();
                 startHappyAnimation();
+
                 changeText(levelCount, "" + GameService.UserSpirit.getAffinityLevel());
                 changeText(affinityPointCount, "" + GameService.UserSpirit.getAffinityPoint());
-
 
                 long delay = 5000;
 
@@ -94,62 +103,74 @@ public class MainActivity extends AppCompatActivity{
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        stopAnimation();
                         startIdleAnimation();
                     }
                 },delay);
             }
         });
 
-        assert menu != null;
-        menu.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, MenuActivity.class);
-                startActivity(intent);
-            }
-        });
+                                assert menu != null;
+                                menu.setOnClickListener(new View.OnClickListener() {
+                                    public void onClick(View v) {
+                                        Intent intent = new Intent(MainActivity.this, MenuActivity.class);
+                                        startActivity(intent);
+                                    }
+                                });
 
-        assert record != null;
-        record.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, RecordsActivity.class);
-                startActivity(intent);
-            }
-        });
+                                assert record != null;
+                                record.setOnClickListener(new View.OnClickListener() {
+                                    public void onClick(View v) {
+                                        Intent intent = new Intent(MainActivity.this, RecordsActivity.class);
+                                        startActivity(intent);
+                                    }
+                                });
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter((GoogleFitSync.FIT_NOTIFY_INTENT)));
-        requestConnection();
+                                assert help != null;
+                                help.setOnClickListener(new View.OnClickListener(){
+                                    public void onClick(View v) {
+                                        Intent intent = new Intent(MainActivity.this, HelpActivity.class);
+                                        startActivity(intent);
+                                    }
+                                });
 
-        Intent intent = new Intent(this, GameService.class);
-        startService(intent);
-    }
+                                LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter((GoogleFitSync.FIT_NOTIFY_INTENT)));
+                                requestConnection();
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        startIdleAnimation();
+                                Intent intent = new Intent(this, GameService.class);
+                                startService(intent);
+                            }
 
-        // This portion of the code updates the MainActivity every second.
-        Thread t = new Thread() {
-
-            @Override
-            public void run() {
-                try {
-                    while (!isInterrupted()) {
-                        Thread.sleep(1000);
-
-                        runOnUiThread(new Runnable() {
                             @Override
-                            public void run() {
-                                GameService.updateAffinityPoint();
+                            public void onResume(){
+                                super.onResume();
+                                startIdleAnimation();
 
-                                final TextView levelCount = (TextView) findViewById(R.id.level_count);
-                                final TextView affinityPointCount = (TextView) findViewById(R.id.experience);
-                                final ImageButton sprite = (ImageButton) findViewById(R.id.sprite);
+                                // This portion of the code updates the MainActivity every second.
+                                Thread t = new Thread() {
 
-                                int affinityLevel = GameService.UserSpirit.getAffinityLevel();
-                                int affinityPoint = GameService.UserSpirit.getAffinityPoint();
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            while (!isInterrupted()) {
+                                                Thread.sleep(1000);
+
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        GameService.updateAffinityPoint();
+
+                                                        final TextView levelCount = (TextView) findViewById(R.id.level_count);
+                                                        final TextView affinityPointCount = (TextView) findViewById(R.id.experience);
+                                                        final ImageButton sprite = (ImageButton) findViewById(R.id.sprite);
+
+                                                        int affinityLevel = GameService.UserSpirit.getAffinityLevel();
+                                                        int affinityPoint = GameService.UserSpirit.getAffinityPoint();
+
+                                                        checkTutorial();
 
                                 startIdleAnimation();
+
                                 changeText(levelCount, ""+ affinityLevel);
                                 changeText(affinityPointCount, "" + affinityPoint);
                             }
@@ -165,8 +186,28 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
+    private void checkTutorial(){
+        SharedPreferences settings = getSharedPreferences("GameSettings", 0);
+        if (settings.getBoolean("firstBaby", false) && !settings.getBoolean("tutorial2", false)){
+            // START TUTORIAL 2
+            // INSERT TUTORIAL 2 HERE.
+        }
+
+        if (settings.getBoolean("firstAdult", false) && !settings.getBoolean("tutorial3", false)){
+            // START TUTORIAL 3
+            Log.d("Settings", "First Adult Detected");
+            FragmentManager fm = getFragmentManager();
+            ReleasePrompt releasePrompt = new ReleasePrompt();
+            releasePrompt.setRetainInstance(true);
+            releasePrompt.show(fm, "fragment_name");
+
+            settings.edit().putBoolean("tutorial3", true).apply();
+        }
+    }
+
     private void startIdleAnimation(){
         ImageButton sprite = (ImageButton) findViewById(R.id.sprite);
+        assert sprite != null;
         sprite.setImageResource(GameService.UserSpirit.getAnimation_idle());
 
         animation_idle = (AnimationDrawable) sprite.getDrawable();
@@ -175,11 +216,28 @@ public class MainActivity extends AppCompatActivity{
 
     private void startHappyAnimation(){
         ImageButton sprite = (ImageButton) findViewById(R.id.sprite);
+        assert sprite != null;
         sprite.setImageResource(GameService.UserSpirit.getAnimation_happy());
 
         animation_happy = (AnimationDrawable) sprite.getDrawable();
         animation_happy.start();
+    }
 
+    private void stopAnimation(){
+        ImageButton sprite = (ImageButton) findViewById(R.id.sprite);
+        assert sprite != null;
+
+        animation_idle = (AnimationDrawable) sprite.getDrawable();
+        animation_idle.stop();
+    }
+
+    private void stopHappyAnimation(){
+        ImageButton sprite = (ImageButton) findViewById(R.id.sprite);
+        assert sprite != null;
+        sprite.setImageResource(GameService.UserSpirit.getAnimation_happy());
+
+        animation_happy = (AnimationDrawable) sprite.getDrawable();
+        animation_happy.stop();
     }
 
     private void changeText(TextView view, String string){
