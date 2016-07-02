@@ -13,8 +13,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 public class MenuActivity extends AppCompatActivity {
     public final static String TAG = "GoogleFitService";
-    private static final int REQUEST_BLUETOOTH = 1001;
-    GoogleApiClient mBluetoothClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

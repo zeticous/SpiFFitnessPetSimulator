@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity{
 
         Log.d("MainActivity", "onCreate started");
         SharedPreferences settings = getSharedPreferences("GameSettings", 0);
+
         if (settings.getBoolean("firstLaunch", true)) {
             Log.d("Settings", "First Launch Detected");
             GameService.UserSpirit = new Egg();
@@ -110,64 +111,62 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-                                assert menu != null;
-                                menu.setOnClickListener(new View.OnClickListener() {
-                                    public void onClick(View v) {
-                                        Intent intent = new Intent(MainActivity.this, MenuActivity.class);
-                                        startActivity(intent);
-                                    }
-                                });
+        assert menu != null;
+        menu.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, MenuActivity.class);
+                startActivity(intent);
+            }
+        });
 
-                                assert record != null;
-                                record.setOnClickListener(new View.OnClickListener() {
-                                    public void onClick(View v) {
-                                        Intent intent = new Intent(MainActivity.this, RecordsActivity.class);
-                                        startActivity(intent);
-                                    }
-                                });
+        assert record != null;
+        record.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, RecordsActivity.class);
+                startActivity(intent);
+            }
+        });
 
-                                assert help != null;
-                                help.setOnClickListener(new View.OnClickListener(){
-                                    public void onClick(View v) {
-                                        Intent intent = new Intent(MainActivity.this, HelpActivity.class);
-                                        startActivity(intent);
-                                    }
-                                });
+        assert help != null;
+        help.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, HelpActivity.class);
+                startActivity(intent);
+            }
+        });
 
-                                LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter((GoogleFitSync.FIT_NOTIFY_INTENT)));
-                                requestConnection();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter((GoogleFitSync.FIT_NOTIFY_INTENT)));
+        requestConnection();
 
-                                Intent intent = new Intent(this, GameService.class);
-                                startService(intent);
-                            }
+        Intent intent = new Intent(this, AlarmService.class);
+        startService(intent);
+    }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        startIdleAnimation();
+
+        // This portion of the code updates the MainActivity every second.
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        Thread.sleep(1000);
+
+                        runOnUiThread(new Runnable() {
                             @Override
-                            public void onResume(){
-                                super.onResume();
-                                startIdleAnimation();
+                            public void run() {
+                                GameService.updateAffinityPoint();
 
-                                // This portion of the code updates the MainActivity every second.
-                                Thread t = new Thread() {
+                                final TextView levelCount = (TextView) findViewById(R.id.level_count);
+                                final TextView affinityPointCount = (TextView) findViewById(R.id.experience);
 
-                                    @Override
-                                    public void run() {
-                                        try {
-                                            while (!isInterrupted()) {
-                                                Thread.sleep(1000);
+                                int affinityLevel = GameService.UserSpirit.getAffinityLevel();
+                                int affinityPoint = GameService.UserSpirit.getAffinityPoint();
 
-                                                runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        GameService.updateAffinityPoint();
-
-                                                        final TextView levelCount = (TextView) findViewById(R.id.level_count);
-                                                        final TextView affinityPointCount = (TextView) findViewById(R.id.experience);
-                                                        final ImageButton sprite = (ImageButton) findViewById(R.id.sprite);
-
-                                                        int affinityLevel = GameService.UserSpirit.getAffinityLevel();
-                                                        int affinityPoint = GameService.UserSpirit.getAffinityPoint();
-
-                                                        checkTutorial();
+                                checkTutorial();
 
                                 startIdleAnimation();
 
@@ -181,7 +180,6 @@ public class MainActivity extends AppCompatActivity{
                 }
             }
         };
-
         t.start();
 
     }
@@ -229,15 +227,6 @@ public class MainActivity extends AppCompatActivity{
 
         animation_idle = (AnimationDrawable) sprite.getDrawable();
         animation_idle.stop();
-    }
-
-    private void stopHappyAnimation(){
-        ImageButton sprite = (ImageButton) findViewById(R.id.sprite);
-        assert sprite != null;
-        sprite.setImageResource(GameService.UserSpirit.getAnimation_happy());
-
-        animation_happy = (AnimationDrawable) sprite.getDrawable();
-        animation_happy.stop();
     }
 
     private void changeText(TextView view, String string){

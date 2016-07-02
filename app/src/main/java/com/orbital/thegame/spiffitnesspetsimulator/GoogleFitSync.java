@@ -38,7 +38,6 @@ public class GoogleFitSync extends IntentService {
 
     public static final String TYPE_GET_STEP_DATA = "getStepData";
     public static final String TYPE_REQUEST_CONNECTION = "requestConnection";
-    public static final String TYPE_REQUEST_BLUETOOTH = "requestBluetooth";
 
     public static final String STEP_COUNT = "stepCount";
     public static final String FIT_NOTIFY_INTENT = "fitStatusUpdateIntent";
