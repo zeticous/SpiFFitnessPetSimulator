@@ -10,7 +10,7 @@ public class OnBootReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equalsIgnoreCase(Intent.ACTION_BOOT_COMPLETED)) {
             Log.d("BOOT","ON BOOT DETECTED");
-            Intent serviceIntent = new Intent(context, GameService.class);
+            Intent serviceIntent = new Intent(context, AlarmService.class);
             context.startService(serviceIntent);
         }
     }
