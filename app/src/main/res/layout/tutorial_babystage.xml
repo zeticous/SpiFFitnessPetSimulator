@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Congratulations!"
+            android:id="@+id/congrats_textView"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:textSize="30dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your egg has hatched into a baby Spirits!\nNow for your Spirits to grow to an adult, it will need to be at level 20. \n\nSo have fun walking!"
+            android:id="@+id/details_textView"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:textSize="18dp"
+            android:layout_marginRight="20dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Also, you can check your collections of Spirits by clicking"
+                android:id="@+id/textView3"
+                android:layout_marginLeft="20dp"
+                android:textSize="17dp"
+                android:layout_alignParentTop="true"
+                android:paddingBottom="50dp"
+                android:layout_alignParentEnd="true"
+                android:lineSpacingExtra="10dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="15dp"
+                />
+            android:longClickable="false"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView"
+                android:src = "@drawable/collections_icon_small"
+                android:adjustViewBounds="true"
+                android:layout_marginEnd="64dp"
+                android:layout_centerVertical="true"
+                android:layout_alignEnd="@+id/textView3"/>
+
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="268dp"
+            android:layout_height="230dp"
+            android:id="@+id/collectionsImage"
+            android:src = "@drawable/colletions_tut"
+            android:adjustViewBounds="true"
+            android:layout_alignTop="@+id/textView3"
+            android:layout_alignEnd="@+id/textView3"
+            android:layout_marginLeft="20dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You can now see your baby Spirits that you have just unlocked."
+            android:id="@+id/collectionsDescription"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:textSize="18dp"
+            android:layout_marginTop="20dp"/>
+
+
+    </LinearLayout>
+</ScrollView>

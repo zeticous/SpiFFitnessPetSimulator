@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1">
+
+        <ImageView
+            android:layout_width="583dp"
+            android:layout_height="380dp"
+            android:id="@+id/navigationMap"
+            android:src="@drawable/navigation"
+            android:layout_gravity="center_horizontal"
+            />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:padding="5dp"
+            android:layout_marginTop="10dp">
+
+            <ImageView
+                android:layout_width="108dp"
+                android:layout_height="38dp"
+                android:src="@drawable/affinity"
+                android:id="@+id/affinityImageView"
+                android:layout_weight="0.12"
+                android:paddingLeft="20dp"
+                android:layout_marginTop="5dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Affinity"
+                android:id="@+id/affinityTextView"
+                android:paddingTop="10dp"
+                android:textStyle="bold"
+                android:paddingBottom="10dp"
+                android:layout_marginLeft="100dp"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="0.28"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="This shows the Affinity Points available. It will be determined by step count."
+                android:id="@+id/affinityDescription"
+                android:layout_marginStart="24dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:textSize="18dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:paddingBottom="20dp"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:padding="5dp"
+            android:layout_marginTop="10dp">
+
+            <ImageView
+                android:layout_width="47dp"
+                android:layout_height="24dp"
+                android:src="@drawable/level"
+                android:id="@+id/levelImage"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Level"
+                android:id="@+id/levelText"
+                android:layout_weight="0.12"
+                android:textStyle="bold"
+                android:paddingLeft="14dp"
+                android:layout_marginLeft="138dp"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="This shows the level of the pet. It can be raised using affinity"
+                android:id="@+id/textViewLevel"
+                android:layout_marginStart="24dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:textSize="18dp"
+                android:paddingRight="25dp"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="61dp"
+            android:weightSum="1"
+            android:padding="5dp"
+            android:layout_marginTop="5dp">
+
+            <ImageView
+                android:layout_width="108dp"
+                android:layout_height="46dp"
+                android:src="@drawable/egg_idle"
+                android:id="@+id/clickButton"
+                android:layout_marginBottom="29dp"
+                android:layout_marginRight="40dp"
+                android:paddingRight="40dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Button"
+                android:id="@+id/clickButtonText"
+                android:layout_weight="0.21"
+                android:textStyle="bold"
+                android:layout_marginTop="13dp"
+                android:layout_marginLeft="67dp"
+                />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Clicking it will level up the Spirit using affinity!"
+                android:id="@+id/clickButtonDescription"
+                android:layout_marginStart="24dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:textSize="18dp"
+                android:paddingRight="25dp"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:padding="5dp"
+            android:layout_marginTop="10dp">
+
+            <ImageView
+                android:layout_width="107dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/menu"
+                android:id="@+id/menuImageView"
+                android:paddingRight="35dp"
+                android:layout_marginLeft="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Menu"
+                android:id="@+id/menuTextView"
+                android:layout_weight="0.12"
+                android:layout_marginLeft="101dp"
+                android:paddingTop="10dp"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:layout_marginBottom="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Click to go to Menu"
+                android:id="@+id/menuDescription"
+                android:layout_marginStart="24dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:textSize="18dp"
+                android:paddingRight="25dp"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:layout_marginTop="10dp"
+            android:padding="5dp"
+            >
+
+            <ImageView
+                android:layout_width="108dp"
+                android:layout_height="38dp"
+                android:src="@drawable/help"
+                android:id="@+id/helpImageView"
+                android:layout_weight="0.12"
+                android:paddingRight="40dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Help"
+                android:id="@+id/helpTextView"
+                android:layout_weight="0.12"
+                android:layout_marginLeft="102dp"
+                android:paddingTop="10dp"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:layout_marginBottom="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Click to get help."
+                android:id="@+id/helpDescription"
+                android:layout_marginStart="24dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:textSize="18dp"
+                android:paddingRight="25dp"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:padding="5dp"
+            android:layout_marginTop="10dp"
+            >
+
+            <ImageView
+                android:layout_width="108dp"
+                android:layout_height="38dp"
+                android:src="@drawable/collections"
+                android:id="@+id/collectionsImageView"
+                android:layout_weight="0.12"
+                android:paddingRight="35dp"
+                android:layout_marginLeft="5dp"/>
+
+            <TextView
+                android:layout_width="184dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Collections"
+                android:id="@+id/collectionsTextView"
+                android:layout_marginLeft="80dp"
+                android:paddingTop="10dp"
+                android:textStyle="bold"
+                android:paddingRight="20dp"
+                android:paddingLeft="10dp"
+                />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Check out your collections of Spirits."
+                android:id="@+id/collectionsDescription"
+                android:layout_marginStart="24dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:textSize="18dp"
+                android:paddingRight="25dp"
+                android:layout_marginTop="5dp"
+                android:layout_alignParentBottom="true"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</ScrollView>

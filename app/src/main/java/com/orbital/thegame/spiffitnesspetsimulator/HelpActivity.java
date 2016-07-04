@@ -14,10 +14,13 @@ public class HelpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
         Button navigationBtn = (Button) findViewById(R.id.btnNavigation);
-        Button gameDetailsBtn = (Button) findViewById(R.id.btnDetails);
-        Button releaseDetailsBtn = (Button) findViewById(R.id.btnReleseDetails);
+        Button babyStageTutBtn = (Button) findViewById(R.id.btnDetails);
+        Button releaseTutBtn = (Button) findViewById(R.id.btnReleseDetails);
 
         assert navigationBtn != null;
+        assert babyStageTutBtn != null;
+        assert releaseTutBtn != null;
+
         navigationBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 FragmentManager fm = getFragmentManager();
@@ -26,22 +29,22 @@ public class HelpActivity extends AppCompatActivity {
                 navFrag.show(fm, "fragment_name");
             }
         });
-        assert gameDetailsBtn != null;
-        gameDetailsBtn.setOnClickListener(new View.OnClickListener(){
+
+        babyStageTutBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 FragmentManager fm = getFragmentManager();
-                GameDetailsTutorial gameDetailFrag = new GameDetailsTutorial();
-                gameDetailFrag.setRetainInstance(true);
-                gameDetailFrag.show(fm, "fragment_name");
+                BabyStageTutorial babyStageTutorial = new BabyStageTutorial();
+                babyStageTutorial.setRetainInstance(true);
+                babyStageTutorial.show(fm, "fragment_name");
             }
         });
-        assert releaseDetailsBtn != null;
-        releaseDetailsBtn.setOnClickListener(new View.OnClickListener(){
+
+        releaseTutBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 FragmentManager fm = getFragmentManager();
-                ReleaseTutorial releaseDetailFrag = new ReleaseTutorial();
-                releaseDetailFrag.setRetainInstance(true);
-                releaseDetailFrag.show(fm, "fragment_name");
+                ReleaseTutorial releaseTutorial = new ReleaseTutorial();
+                releaseTutorial.setRetainInstance(true);
+                releaseTutorial.show(fm, "fragment_name");
             }
         });
     }

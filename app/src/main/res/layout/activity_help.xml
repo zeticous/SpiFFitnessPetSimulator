@@ -28,28 +28,34 @@
         android:text="Navigations"
         android:id="@+id/btnNavigation"
         android:layout_below="@+id/help_header"
-        android:layout_marginTop="96dp"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="70dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Game Details"
+        android:text="Baby Stage"
         android:id="@+id/btnDetails"
         android:layout_below="@+id/btnNavigation"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="42dp"
-        android:layout_alignParentStart="true"/>
+        android:layout_marginTop="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Release Spirits"
+        android:text="Adult Stage"
         android:id="@+id/btnReleseDetails"
         android:layout_below="@+id/btnDetails"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="42dp"
-        android:layout_alignParentStart="true"/>
+        android:layout_marginTop="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"/>
 
 </RelativeLayout>

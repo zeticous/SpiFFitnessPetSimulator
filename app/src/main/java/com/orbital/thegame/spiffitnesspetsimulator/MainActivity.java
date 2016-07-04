@@ -48,9 +48,9 @@ public class MainActivity extends AppCompatActivity{
 
             //Fragment open up when first launch
             FragmentManager fm = getFragmentManager();
-            NavigationPrompt navPrompt = new NavigationPrompt();
-            navPrompt.setRetainInstance(true);
-            navPrompt.show(fm, "fragment_name");
+            NavigationTutorial navigationTutorial = new NavigationTutorial();
+            navigationTutorial.setRetainInstance(true);
+            navigationTutorial.show(fm, "fragment_name");
 
 
             if (GameService.UserSpirit.getRegister() == Spirits.EGG_REG) {
@@ -186,19 +186,24 @@ public class MainActivity extends AppCompatActivity{
 
     private void checkTutorial(){
         SharedPreferences settings = getSharedPreferences("GameSettings", 0);
+
         if (settings.getBoolean("firstBaby", false) && !settings.getBoolean("tutorial2", false)){
             // START TUTORIAL 2
-            // INSERT TUTORIAL 2 HERE.
+            Log.d("Settings", "First Baby Detected");
+            FragmentManager fm = getFragmentManager();
+            BabyStageTutorial babyStageTutorial = new BabyStageTutorial();
+            babyStageTutorial.setRetainInstance(true);
+            babyStageTutorial.show(fm, "fragment_name");
+            settings.edit().putBoolean("tutorial2", true).apply();
         }
 
         if (settings.getBoolean("firstAdult", false) && !settings.getBoolean("tutorial3", false)){
             // START TUTORIAL 3
             Log.d("Settings", "First Adult Detected");
             FragmentManager fm = getFragmentManager();
-            ReleasePrompt releasePrompt = new ReleasePrompt();
-            releasePrompt.setRetainInstance(true);
-            releasePrompt.show(fm, "fragment_name");
-
+            ReleaseTutorial releaseTutorial = new ReleaseTutorial();
+            releaseTutorial.setRetainInstance(true);
+            releaseTutorial.show(fm, "fragment_name");
             settings.edit().putBoolean("tutorial3", true).apply();
         }
     }
