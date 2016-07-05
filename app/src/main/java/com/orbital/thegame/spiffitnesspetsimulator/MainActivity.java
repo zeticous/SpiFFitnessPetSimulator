@@ -146,6 +146,7 @@ public class MainActivity extends AppCompatActivity{
     public void onResume(){
         super.onResume();
         startIdleAnimation();
+        checkTutorial();
 
         // This portion of the code updates the MainActivity every second.
         Thread t = new Thread() {
@@ -166,7 +167,11 @@ public class MainActivity extends AppCompatActivity{
                                 int affinityLevel = GameService.UserSpirit.getAffinityLevel();
                                 int affinityPoint = GameService.UserSpirit.getAffinityPoint();
 
-                                checkTutorial();
+                                try{
+                                    checkTutorial();
+                                } catch(IllegalStateException e){
+                                    Log.e("Tutorial","IllegalStateException due to no running activity");
+                                }
 
                                 startIdleAnimation();
 

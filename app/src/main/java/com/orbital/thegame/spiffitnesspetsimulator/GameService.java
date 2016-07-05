@@ -1,7 +1,5 @@
 package com.orbital.thegame.spiffitnesspetsimulator;
 
-import android.app.AlarmManager;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -9,23 +7,39 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
+import com.google.android.gms.wearable.Wearable;
+
 public class GameService extends Service {
     public static Spirits UserSpirit;
     int stepCount;
-    public static final int FACTOR = 2;
+    public static final int FACTOR = 300;
     public static final String MY_PREFS_NAME = "MyPrefsFile";
 
     private final int mId = 1314520;
 
     public final static String TAG = "GoogleFitService";
-
     public final static String PTAG = "SharedPref";
+
+    GoogleApiClient mGoogleWearClient;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -33,6 +47,7 @@ public class GameService extends Service {
         if (UserSpirit == null) {
             loadSpirits();
         }
+
         int affinityLevel = UserSpirit.getAffinityLevel();
 
         if (UserSpirit.evolveCheck(affinityLevel)) {
@@ -52,6 +67,7 @@ public class GameService extends Service {
             }
 
             register();
+            requestWearConnection(true);
 
             //NOTIFICATION FOR EVOLUTION
             message = "Your " + nameBefore + " has evolved to " + nameAfter + "!!";
@@ -63,6 +79,9 @@ public class GameService extends Service {
         if (UserSpirit.runCheck()) {
             String name = UserSpirit.getName();
             UserSpirit = UserSpirit.initialise();
+            saveSpirits();
+
+            requestWearConnection(true);
 
             //NOTIFICATION FOR RUNNING AWAY
             String message = "Your " + name + " has ran away due to neglect.";
@@ -70,6 +89,8 @@ public class GameService extends Service {
         }
 
         saveSpirits();
+
+        requestWearConnection(false);
         return START_NOT_STICKY;
     }
 
@@ -79,13 +100,17 @@ public class GameService extends Service {
     }
 
     public static final String TITLE = "SpiF";
-
     private void sendNotification(String message){
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.watch_background);
+        NotificationCompat.WearableExtender wearableExtender
+                = new NotificationCompat.WearableExtender().setHintHideIcon(true).setBackground(bitmap);
+
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.egg_idle1)
                 .setContentTitle(TITLE)
                 .setContentText(message)
-                .setAutoCancel(true);
+                .setAutoCancel(true)
+                .extend(wearableExtender);
 
         Intent resultIntent = new Intent(this, MainActivity.class);
 
@@ -96,7 +121,7 @@ public class GameService extends Service {
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(resultPendingIntent);
 
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManagerCompat mNotificationManager = NotificationManagerCompat.from(getApplicationContext());
         mNotificationManager.notify(mId, mBuilder.build());
     }
 
@@ -179,12 +204,66 @@ public class GameService extends Service {
         editor.putInt("stepCount", UserSpirit.getStepCount());
         editor.putInt("register", UserSpirit.getRegister());
         editor.putInt("affinityLevel", UserSpirit.getAffinityLevel());
+        editor.putInt("affinityPoint", UserSpirit.getAffinityPoint());
 
         editor.putLong("startTime", UserSpirit.getStartTime());
         editor.putLong("endTime", UserSpirit.getEndTime());
 
         editor.commit();
         Log.d(PTAG, "Shared Preference saved");
+    }
+
+    private static final String WEAR = "AndroidWear";
+    private void requestWearConnection(boolean urgent){
+        final boolean var = urgent;
+        mGoogleWearClient = new GoogleApiClient.Builder(this)
+                .addApi(Wearable.API)
+                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                    @Override
+                    public void onConnected(@Nullable Bundle bundle) {
+                        Log.d(WEAR,"onConnected: "+bundle);
+                        sendWearData(var);
+                    }
+
+                    @Override
+                    public void onConnectionSuspended(int i) {
+                        Log.d(WEAR, "onConnectionSuspended: " + i);
+                    }
+                })
+                .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        Log.d(TAG, "onConnectionFailed: " + connectionResult);
+                    }
+                })
+                .build();
+    }
+
+    private void sendWearData(boolean urgent){
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        int restoredRegister = prefs.getInt("register", -99999);
+        int restoredAffinityLevel = prefs.getInt("affinityLevel", -99);
+        int restoredAffinityPoint = prefs.getInt("affinityPoint", -99);
+
+        PutDataMapRequest req = PutDataMapRequest.create("/dataStream");
+        req.getDataMap().putInt("register", restoredRegister);
+        req.getDataMap().putInt("affinityLevel", restoredAffinityLevel);
+        req.getDataMap().putInt("affinityPoint", restoredAffinityPoint);
+
+        PutDataRequest putDataRequest = req.asPutDataRequest();
+
+        if(urgent){
+            putDataRequest.setUrgent();
+        }
+
+        PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi.putDataItem(mGoogleWearClient,putDataRequest);
+
+        pendingResult.setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
+            @Override
+            public void onResult(@NonNull DataApi.DataItemResult dataItemResult) {
+                Log.e("AndroidWear", "Result sent");
+            }
+        });
     }
 
     public void loadSpirits(){

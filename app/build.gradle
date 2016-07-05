@@ -9,7 +9,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 23
         versionCode 1
-        versionName "0.3b"
+        versionName "0.4b"
         multiDexEnabled true
     }
     buildTypes {
@@ -30,6 +30,7 @@ repositories {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
+    wearApp project(':spiffitnesspetsimulator')
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.google.android.gms:play-services-fitness:9.0.2'
     compile 'com.android.support:multidex:1.0.1'

@@ -1,22 +1,13 @@
 package com.orbital.thegame.spiffitnesspetsimulator;
 
-import android.app.Service;
-import android.content.Intent;
-import android.os.IBinder;
-
 import android.app.AlarmManager;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -58,7 +49,7 @@ public class AlarmService extends Service {
             AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             Intent intent = new Intent (ALARM_RECEIVE);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0,intent,0);
-            alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000*30, pendingIntent);
+            alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000*60, pendingIntent);
         }
     }
 
