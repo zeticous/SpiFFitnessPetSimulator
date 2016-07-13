@@ -2,6 +2,7 @@ package com.orbital.thegame.spiffitnesspetsimulator;
 
 
 import android.app.FragmentManager;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -20,6 +21,18 @@ public class HelpActivity extends AppCompatActivity {
         assert navigationBtn != null;
         assert babyStageTutBtn != null;
         assert releaseTutBtn != null;
+
+        SharedPreferences settings = getSharedPreferences("GameSettings", 0);
+        babyStageTutBtn.setVisibility(View.GONE);
+        releaseTutBtn.setVisibility(View.GONE);
+
+        if(settings.getBoolean("tutorial2", true)){
+            babyStageTutBtn.setVisibility(View.VISIBLE);
+        }
+        if(settings.getBoolean("tutorial3", true)){
+            releaseTutBtn.setVisibility(View.VISIBLE);
+        }
+
 
         navigationBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {

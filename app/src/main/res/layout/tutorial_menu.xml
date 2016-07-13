@@ -2,90 +2,74 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1"
+        android:layout_margin="16dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Menu"
-            android:id="@+id/textView"
-            android:textSize="50dp"
-            android:paddingLeft="25dp"
-            />
+            android:id="@+id/congrats_textView"
+            android:textSize="30sp"
+            android:textStyle="bold"/>
 
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/statusImageView"
             android:src="@drawable/status"
-            android:layout_alignParentEnd="true"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"/>
+            android:adjustViewBounds="true"
+            />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="View the current status/species of your Spirits."
             android:id="@+id/status_textView"
-            android:layout_marginLeft="25dp"
-            android:textSize="20dp"
-            android:paddingLeft="10dp"
-            android:layout_alignBottom="@+id/statusImageView"
-            android:layout_centerHorizontal="true"/>
+            android:textSize="18sp"/>
 
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/stepcount_imageView"
             android:src="@drawable/stepcount_tutorial"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:layout_alignTop="@+id/status_textView"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="20dp"/>
+            android:adjustViewBounds="true"/>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="This shows your current step count. \nStep count will be used to gain affinity to level up your Spirits!\nThe value will reset upon evolving to baby Spirit which takes 3 days.
         \nThe level of the Egg will determine the species it will evolve into.   "
             android:id="@+id/textView2"
-            android:layout_marginLeft="25dp"
-            android:textSize="20dp"
-            android:paddingLeft="10dp"
-            android:layout_below="@+id/statusImageView"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="117dp"
-            />
+            android:textSize="18sp"/>
 
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/notificationsImageView"
             android:src="@drawable/notifications"
-            android:paddingLeft="20dp"
-            android:paddingRight="30dp"
-            android:nestedScrollingEnabled="false"
-            android:layout_below="@+id/textView2"
-            android:layout_alignParentStart="true"
-            android:paddingBottom="60dp"
-            android:adjustViewBounds="true"
-            android:paddingTop="20dp"/>
+            android:adjustViewBounds="true"/>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Turn on or off notifications for updates on your Spirits "
             android:id="@+id/notifications_textView"
-            android:layout_marginLeft="25dp"
-            android:textSize="20dp"
-            android:paddingRight="20dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            />
+            android:textSize="18sp"
+            android:paddingBottom="20dp"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </ScrollView>

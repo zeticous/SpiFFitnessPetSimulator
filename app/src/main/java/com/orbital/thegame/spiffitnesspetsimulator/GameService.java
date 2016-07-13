@@ -28,10 +28,12 @@ import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
+import java.util.Date;
+
 public class GameService extends Service {
     public static Spirits UserSpirit;
     int stepCount;
-    public static final int FACTOR = 300;
+    public static final int FACTOR = 2;
     public static final String MY_PREFS_NAME = "MyPrefsFile";
 
     private final int mId = 1314520;
@@ -67,7 +69,7 @@ public class GameService extends Service {
             }
 
             register();
-            requestWearConnection(true);
+            requestWearConnection();
 
             //NOTIFICATION FOR EVOLUTION
             message = "Your " + nameBefore + " has evolved to " + nameAfter + "!!";
@@ -81,7 +83,7 @@ public class GameService extends Service {
             UserSpirit = UserSpirit.initialise();
             saveSpirits();
 
-            requestWearConnection(true);
+            requestWearConnection();
 
             //NOTIFICATION FOR RUNNING AWAY
             String message = "Your " + name + " has ran away due to neglect.";
@@ -90,7 +92,7 @@ public class GameService extends Service {
 
         saveSpirits();
 
-        requestWearConnection(false);
+        requestWearConnection();
         return START_NOT_STICKY;
     }
 
@@ -214,15 +216,15 @@ public class GameService extends Service {
     }
 
     private static final String WEAR = "AndroidWear";
-    private void requestWearConnection(boolean urgent){
-        final boolean var = urgent;
+
+    private void requestWearConnection(){
         mGoogleWearClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
                         Log.d(WEAR,"onConnected: "+bundle);
-                        sendWearData(var);
+                        sendWearData();
                     }
 
                     @Override
@@ -237,24 +239,25 @@ public class GameService extends Service {
                     }
                 })
                 .build();
+        mGoogleWearClient.connect();
+
+        sendWearData();
     }
 
-    private void sendWearData(boolean urgent){
+    private void sendWearData(){
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         int restoredRegister = prefs.getInt("register", -99999);
         int restoredAffinityLevel = prefs.getInt("affinityLevel", -99);
         int restoredAffinityPoint = prefs.getInt("affinityPoint", -99);
 
-        PutDataMapRequest req = PutDataMapRequest.create("/dataStream");
+        PutDataMapRequest req = PutDataMapRequest.create("/data");
         req.getDataMap().putInt("register", restoredRegister);
         req.getDataMap().putInt("affinityLevel", restoredAffinityLevel);
         req.getDataMap().putInt("affinityPoint", restoredAffinityPoint);
+        req.getDataMap().putLong("time", new Date().getTime());
 
         PutDataRequest putDataRequest = req.asPutDataRequest();
-
-        if(urgent){
-            putDataRequest.setUrgent();
-        }
+        putDataRequest.setUrgent();
 
         PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi.putDataItem(mGoogleWearClient,putDataRequest);
 
