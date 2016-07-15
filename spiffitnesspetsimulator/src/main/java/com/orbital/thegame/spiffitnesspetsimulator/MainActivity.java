@@ -1,6 +1,8 @@
 package com.orbital.thegame.spiffitnesspetsimulator;
 
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
@@ -8,7 +10,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -22,8 +23,7 @@ import java.util.Date;
 
 public class MainActivity extends WearableActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
 
-    public static WatchSpirit UserSpirit;
-
+    public static final int FACTOR = 2;
     public static final int EGG_REG = 10000;
 
     public static final int PIG_BABY_REG = 10001;
@@ -36,21 +36,22 @@ public class MainActivity extends WearableActivity implements GoogleApiClient.Co
     public static final int PANDA_ADULT_REG = 10006;
 
     private GoogleApiClient mGoogleApiClient;
-    public static int affinityLevel = 0, affinityPoint = 0, register = 0;
+    public static int affinityLevel, stepCount, register, affinityPoint;
+    public int animationIdle, animationHappy;
+    private AnimationDrawable animation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // ATTENTION: This "addApi(AppIndex.API)"was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
-                .addApi(AppIndex.API)
                 .build();
+
+        mGoogleApiClient.connect();
 
         ImageView sprite = (ImageView) findViewById(R.id.watch_sprite);
         sprite.setOnClickListener(new View.OnClickListener() {
@@ -61,60 +62,43 @@ public class MainActivity extends WearableActivity implements GoogleApiClient.Co
         });
     }
 
-    /*private void handleFirstLaunch() {
-        SharedPreferences settings = getSharedPreferences("GameSettings", 0);
-        if (settings.getBoolean("firstLaunch", true)) {
-            Log.d("Settings", "First Launch Detected");
-            UserSpirit = new WatchSpirit();
-            //saveSpirit();
-
-            settings.edit().putBoolean("firstLaunch", false).apply();
-        } else {
-            loadSpirit();
-        }
+    public static void updateAffinityPoint(){
+        affinityPoint = stepCount/FACTOR - affinityLevel;
     }
 
-    public void saveSpirit(){
-        SharedPreferences settings = getSharedPreferences("GameSettings", 0);
-
-        settings.edit().putInt("affinityPoint", 0).apply();
-        settings.edit().putInt("affinityLevel", 0).apply();
-        settings.edit().putInt("animation_happy", 0).apply();
-        settings.edit().putInt("animation_idle", 0).apply();
-    }
-
-    public void loadSpirit(){
-        SharedPreferences settings = getSharedPreferences("GameSettings", 0);
-        UserSpirit = new WatchSpirit();
-
-        int affinityLevel = settings.getInt("affinityLevel", -99);
-        int affinityPoint = settings.getInt("affinityPoint", -99);
-
-        UserSpirit.setAffinityLevel(affinityLevel);
-        UserSpirit.setAffinityPoint(affinityPoint);
-    }*/
 
     private void handleOnClick(){
+        stopAnimation();
+        startHappyAnimation();
         TextView levelCount = (TextView) findViewById(R.id.watch_level_count);
         TextView pointCount = (TextView) findViewById(R.id.watch_affinity_point);
 
-        affinityLevel += affinityPoint;
-        affinityPoint = 0;
-
-        //UserSpirit.setAffinityLevel(affinityLevel);
-        //UserSpirit.setAffinityPoint(affinityPoint);
+        if (affinityPoint > 0){
+            ++affinityLevel;
+            updateAffinityPoint();
+        }
 
         levelCount.setText("" + affinityLevel);
         pointCount.setText("" + affinityPoint);
 
-        sendData(affinityLevel, affinityPoint);
-        //saveSpirit();
+        sendData(affinityLevel, stepCount);
+
+        long delay = 5000;
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                stopAnimation();
+                startIdleAnimation();
+            }
+        },delay);
     }
 
-    private void sendData(int affinityLevel, int affinityPoint){
+    private void sendData(int affinityLevel, int stepCount){
         PutDataMapRequest req = PutDataMapRequest.create("/data");
         req.getDataMap().putInt("affinityLevel", affinityLevel);
-        req.getDataMap().putInt("affinityPoint", affinityPoint);
+        req.getDataMap().putInt("stepCount", stepCount);
         req.getDataMap().putLong("time", new Date().getTime());
 
         PutDataRequest putDataRequest = req.asPutDataRequest();
@@ -138,6 +122,10 @@ public class MainActivity extends WearableActivity implements GoogleApiClient.Co
     @Override
     protected void onResume(){
         super.onResume();
+        setImage(register);
+        updateAffinityPoint();
+        startIdleAnimation();
+
         TextView levelCount = (TextView) findViewById(R.id.watch_level_count);
         TextView pointCount = (TextView) findViewById(R.id.watch_affinity_point);
 
@@ -145,6 +133,60 @@ public class MainActivity extends WearableActivity implements GoogleApiClient.Co
         pointCount.setText("" + affinityPoint);
 
         mGoogleApiClient.connect();
+
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        Thread.sleep(1000);
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                TextView levelCount = (TextView) findViewById(R.id.watch_level_count);
+                                TextView pointCount = (TextView) findViewById(R.id.watch_affinity_point);
+
+                                stopAnimation();
+                                startIdleAnimation();
+
+                                levelCount.setText("" + affinityLevel);
+                                pointCount.setText("" + affinityPoint);
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {
+                    Log.e("Thread", "NOT RUNNING THREAD");
+                }
+            }
+        };
+        t.start();
+    }
+
+    private void startIdleAnimation(){
+        ImageView sprite = (ImageView) findViewById(R.id.watch_sprite);
+        assert sprite != null;
+        sprite.setImageResource(animationIdle);
+
+        animation = (AnimationDrawable) sprite.getDrawable();
+        animation.start();
+    }
+
+    private void startHappyAnimation(){
+        ImageView sprite = (ImageView) findViewById(R.id.watch_sprite);
+        assert sprite != null;
+        sprite.setImageResource(animationHappy);
+
+        animation = (AnimationDrawable) sprite.getDrawable();
+        animation.start();
+    }
+
+    private void stopAnimation(){
+        ImageView sprite = (ImageView) findViewById(R.id.watch_sprite);
+        assert sprite != null;
+
+        animation = (AnimationDrawable) sprite.getDrawable();
+        animation.stop();
     }
 
     @Override
@@ -161,5 +203,38 @@ public class MainActivity extends WearableActivity implements GoogleApiClient.Co
     @Override
     public void onConnectionFailed (@NonNull ConnectionResult result){
         Log.e("AndroidWear", "CONNECTION FAILED. REASON: " + result);
+    }
+
+    public void setImage(int register){
+        switch(register){
+            case EGG_REG:
+                animationIdle = R.drawable.egg_idle;
+                animationHappy = R.drawable.egg_happy;
+                break;
+            case PIG_BABY_REG:
+                animationIdle = R.drawable.pig_baby_idle;
+                animationHappy = R.drawable.pig_baby_happy;
+                break;
+            case PIG_ADULT_REG:
+                animationIdle = R.drawable.pig_adult_idle;
+                animationHappy = R.drawable.pig_adult_happy;
+                break;
+            case PENGUIN_BABY_REG:
+                animationIdle = R.drawable.penguin_baby_idle;
+                animationHappy = R.drawable.penguin_baby_happy;
+                break;
+            case PENGUIN_ADULT_REG:
+                animationIdle = R.drawable.penguin_adult_idle;
+                animationHappy = R.drawable.penguin_adult_happy;
+                break;
+            case PANDA_BABY_REG:
+                animationIdle = R.drawable.panda_baby_idle;
+                animationHappy = R.drawable.panda_baby_happy;
+                break;
+            case PANDA_ADULT_REG:
+                animationIdle = R.drawable.panda_adult_idle;
+                animationHappy = R.drawable.panda_adult_happy;
+                break;
+        }
     }
 }

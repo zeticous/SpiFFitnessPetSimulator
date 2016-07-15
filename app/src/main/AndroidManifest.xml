@@ -21,12 +21,6 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-            android:screenOrientation="true"
         </activity>
         <activity
             android:name=".MenuActivity"
@@ -62,11 +56,33 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
-                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
-                <data android:scheme="wear" android:host="*" android:pathPrefix="/data" />
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED"/>
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED"/>
+
+                <data
+                    android:host="*"
+                    android:pathPrefix="/data"
+                    android:scheme="wear"/>
             </intent-filter>
         </service>
+
+        <activity android:name=".welcomeActivity"
+                  android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".connectActivity"
+                  android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".firstLaunchActivity"
+                  android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".launcherActivity"
+                  android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

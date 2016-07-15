@@ -2,6 +2,7 @@ package com.orbital.thegame.spiffitnesspetsimulator;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -152,6 +153,10 @@ public class GoogleFitSync extends IntentService {
         }
         if (stepDataRequest){
             if(mGoogleApiFitnessClient.isConnected()){
+                if(startTime == 1 && endTime == 2){
+                    return;
+                }
+
                 Log.d(TAG,"Requesting step count from Google Fit");
                 getSteps(startTime,endTime);
             }
@@ -204,8 +209,7 @@ public class GoogleFitSync extends IntentService {
                 steps += dp.getValue(field).asInt();
             }
         }
-        //Log.e(TAG, "Value: "+steps);
-        sendSteps(steps);
+        setSteps(steps);
         //Log.d(TAG, "Retrieval Successful, terminating Google Fit");
     }
 
@@ -222,9 +226,29 @@ public class GoogleFitSync extends IntentService {
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
-    private void sendSteps(int stepCount){
+    /*private void sendSteps(int stepCount){
         Intent intent = new Intent(FIT_NOTIFY_INTENT);
         intent.putExtra(STEP_COUNT, stepCount);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }*/
+
+    private void setSteps(int stepCount){
+        GameService.UserSpirit.setStepCount(stepCount);
+        saveSpirits();
+    }
+
+    public final static String PTAG = "SharedPref";
+    public static final String MY_PREFS_NAME = "GameSaveFile";
+
+    public void saveSpirits(){
+        SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+        editor.putString("spiritName", GameService.UserSpirit.getName());
+        editor.putInt("stepCount", GameService.UserSpirit.getStepCount());
+
+        editor.putLong("startTime", GameService.UserSpirit.getStartTime());
+        editor.putLong("endTime", GameService.UserSpirit.getEndTime());
+
+        editor.apply();
+        Log.d(PTAG, "Shared Preference saved");
     }
 }

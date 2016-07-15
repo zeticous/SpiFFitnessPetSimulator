@@ -9,8 +9,6 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-
 public class MenuActivity extends AppCompatActivity {
     public final static String TAG = "GoogleFitService";
 

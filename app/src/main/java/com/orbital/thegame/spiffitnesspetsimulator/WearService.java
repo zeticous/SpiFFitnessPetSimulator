@@ -1,7 +1,7 @@
 package com.orbital.thegame.spiffitnesspetsimulator;
 
+import android.content.SharedPreferences;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -22,7 +22,7 @@ public class WearService extends WearableListenerService {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "WearService started");
+        //Log.d(TAG, "WearService started");
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
                 .build();
@@ -48,7 +48,7 @@ public class WearService extends WearableListenerService {
             }
         }
 
-        Toast.makeText(this, "WearService started", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "WearService started", Toast.LENGTH_SHORT).show();
         for (DataEvent event : dataEvents) {
             if (event.getType() == DataEvent.TYPE_CHANGED) {
                 DataItem item = event.getDataItem();
@@ -64,9 +64,29 @@ public class WearService extends WearableListenerService {
 
     private void setUpData(DataMap dataMap){
         int affinityLevel = dataMap.getInt("affinityLevel");
-        int affinityPoint = dataMap.getInt("affinityPoint");
+        int stepCount = dataMap.getInt("stepCount");
 
         GameService.UserSpirit.setAffinityLevel(affinityLevel);
-        GameService.UserSpirit.setAffinityPoint(affinityPoint);
+        GameService.UserSpirit.setStepCount(stepCount);
+
+        GameService.updateAffinityPoint();
+        saveSpirits();
+    }
+
+    public final static String PTAG = "SharedPref";
+    public static final String MY_PREFS_NAME = "GameSaveFile";
+
+    public void saveSpirits(){
+        SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+        editor.putInt("stepCount", GameService.UserSpirit.getStepCount());
+        editor.putInt("register", GameService.UserSpirit.getRegister());
+        editor.putInt("affinityLevel", GameService.UserSpirit.getAffinityLevel());
+        editor.putInt("affinityPoint", GameService.UserSpirit.getAffinityPoint());
+
+        editor.putLong("startTime", GameService.UserSpirit.getStartTime());
+        editor.putLong("endTime", GameService.UserSpirit.getEndTime());
+
+        editor.apply();
+        Log.d(PTAG, "Shared Preference saved");
     }
 }

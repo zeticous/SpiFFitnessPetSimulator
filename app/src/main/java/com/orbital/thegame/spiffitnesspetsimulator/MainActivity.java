@@ -1,17 +1,13 @@
 package com.orbital.thegame.spiffitnesspetsimulator;
 
 import android.app.FragmentManager;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.content.LocalBroadcastManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -20,53 +16,43 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.fitness.FitnessStatusCodes;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
+import com.google.android.gms.wearable.Wearable;
+
+import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity{
-    boolean authInProgress = false;
-    public static final int REQUEST_OAUTH = 1337;
-    public final static String TAG = "GoogleFitService";
     int stepCount, affinityLevel, affinityPoint;
 
     public final static String PTAG = "SharedPref";
-    public static final String MY_PREFS_NAME = "MyPrefsFile";
+    public static final String MY_PREFS_NAME = "GameSaveFile";
 
     private AnimationDrawable animation_idle, animation_happy;
+    private boolean happyAnimationRunning = false;
+    private boolean idleAnimationRunning = false;
+
+    GoogleApiClient mGoogleWearClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Log.d("MainActivity", "onCreate started");
-        SharedPreferences settings = getSharedPreferences("GameSettings", 0);
+        requestConnection();
 
-        if (settings.getBoolean("firstLaunch", true)) {
-            Log.d("Settings", "First Launch Detected");
-            GameService.UserSpirit = new Egg();
-
-            //Fragment open up when first launch
-            FragmentManager fm = getFragmentManager();
-            NavigationTutorial navigationTutorial = new NavigationTutorial();
-            navigationTutorial.setRetainInstance(true);
-            navigationTutorial.show(fm, "fragment_name");
-
-
-            if (GameService.UserSpirit.getRegister() == Spirits.EGG_REG) {
-                Log.e("FirstLaunch", "UserSpirit successfully created");
-                saveSpirits();
-            }
-
-            settings.edit().putBoolean("firstLaunch", false).apply();
-        } else {
+        try {
+            stepCount = GameService.UserSpirit.getStepCount();
+            affinityLevel = GameService.UserSpirit.getAffinityLevel();
+            affinityPoint = GameService.UserSpirit.getAffinityPoint();
+        } catch (NullPointerException e) {
             loadSpirits();
         }
-
-        stepCount = GameService.UserSpirit.getStepCount();
-        affinityLevel = GameService.UserSpirit.getAffinityLevel();
-        affinityPoint = GameService.UserSpirit.getAffinityPoint();
-
         ImageButton sprite = (ImageButton) findViewById(R.id.sprite);
         ImageButton menu = (ImageButton) findViewById(R.id.menu);
         ImageButton help = (ImageButton) findViewById(R.id.help);
@@ -75,8 +61,11 @@ public class MainActivity extends AppCompatActivity{
         final TextView levelCount = (TextView) findViewById(R.id.level_count);
         final TextView affinityPointCount = (TextView) findViewById(R.id.experience);
 
-        changeText(levelCount, "" + affinityLevel);
-        changeText(affinityPointCount, "" + affinityPoint);
+        assert levelCount != null;
+        assert affinityPointCount != null;
+
+        levelCount.setText(""+ affinityLevel);
+        affinityPointCount.setText("" + affinityPoint);
 
         assert sprite != null;
         sprite.setOnClickListener(new View.OnClickListener() {
@@ -87,16 +76,20 @@ public class MainActivity extends AppCompatActivity{
                 if (affinityPoint > 0) {
                     GameService.UserSpirit.setAffinityLevel(++affinityLevel);
                     GameService.UserSpirit.setAffinityPoint(--affinityPoint);
+                    saveSpirits();
+                    requestWearConnection();
 
                     /*Log.d(TAG,"START TIME IN LONG: "+ GameService.UserSpirit.getStartTime());
                     Log.d(TAG,"END TIME IN LONG: "+GameService.UserSpirit.getEndTime());*/
                 }
 
-                stopAnimation();
-                startHappyAnimation();
+                if (!happyAnimationRunning) {
+                    stopAnimation();
+                    startHappyAnimation();
+                }
 
-                changeText(levelCount, "" + GameService.UserSpirit.getAffinityLevel());
-                changeText(affinityPointCount, "" + GameService.UserSpirit.getAffinityPoint());
+                levelCount.setText(""+ GameService.UserSpirit.getAffinityLevel());
+                affinityPointCount.setText("" + GameService.UserSpirit.getAffinityPoint());
 
                 long delay = 5000;
 
@@ -135,16 +128,26 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter((GoogleFitSync.FIT_NOTIFY_INTENT)));
-        requestConnection();
+        /*LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter((GoogleFitSync.FIT_NOTIFY_INTENT)));
+        requestConnection();*/
 
         Intent intent = new Intent(this, AlarmService.class);
         startService(intent);
     }
 
+    private void requestConnection(){
+        Log.d("MainActivity","STARTED: requestConnection");
+        Intent service = new Intent(this, GoogleFitSync.class);
+        service.putExtra(GoogleFitSync.TYPE_REQUEST_CONNECTION, GoogleFitSync.TYPE_TRUE);
+        service.putExtra(GoogleFitSync.TYPE_GET_STEP_DATA, GoogleFitSync.TYPE_TRUE);
+        startService(service);
+    }
+
     @Override
     public void onResume(){
         super.onResume();
+
+        GameService.updateAffinityPoint();
         startIdleAnimation();
         checkTutorial();
 
@@ -154,13 +157,11 @@ public class MainActivity extends AppCompatActivity{
             public void run() {
                 try {
                     while (!isInterrupted()) {
-                        Thread.sleep(1000);
+                        Thread.sleep(10000);
 
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                GameService.updateAffinityPoint();
-
                                 final TextView levelCount = (TextView) findViewById(R.id.level_count);
                                 final TextView affinityPointCount = (TextView) findViewById(R.id.experience);
 
@@ -173,10 +174,14 @@ public class MainActivity extends AppCompatActivity{
                                     Log.e("Tutorial","IllegalStateException due to no running activity");
                                 }
 
+                                stopAnimation();
                                 startIdleAnimation();
 
-                                changeText(levelCount, ""+ affinityLevel);
-                                changeText(affinityPointCount, "" + affinityPoint);
+                                assert levelCount != null;
+                                assert affinityPointCount != null;
+
+                                levelCount.setText(""+ affinityLevel);
+                                affinityPointCount.setText("" + affinityPoint);
                             }
                         });
                     }
@@ -189,8 +194,23 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
+    @Override
+    public void onPause(){
+        super.onPause();
+        saveSpirits();
+    }
+
     private void checkTutorial(){
         SharedPreferences settings = getSharedPreferences("GameSettings", 0);
+
+        if(!settings.getBoolean("tutorial1",false)){
+            Log.d("Settings", "Start Tutorial 1");
+            FragmentManager fm = getFragmentManager();
+            NavigationTutorial navigationTutorial = new NavigationTutorial();
+            navigationTutorial.setRetainInstance(true);
+            navigationTutorial.show(fm, "fragment_name");
+            settings.edit().putBoolean("tutorial1", true).apply();
+        }
 
         if (settings.getBoolean("firstBaby", false) && !settings.getBoolean("tutorial2", false)){
             // START TUTORIAL 2
@@ -214,6 +234,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void startIdleAnimation(){
+        idleAnimationRunning = true;
         ImageButton sprite = (ImageButton) findViewById(R.id.sprite);
         assert sprite != null;
         sprite.setImageResource(GameService.UserSpirit.getAnimation_idle());
@@ -223,12 +244,23 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void startHappyAnimation(){
+        happyAnimationRunning = true;
         ImageButton sprite = (ImageButton) findViewById(R.id.sprite);
         assert sprite != null;
         sprite.setImageResource(GameService.UserSpirit.getAnimation_happy());
 
         animation_happy = (AnimationDrawable) sprite.getDrawable();
         animation_happy.start();
+
+        long delay = 5000;
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                happyAnimationRunning = false;
+            }
+        },delay);
     }
 
     private void stopAnimation(){
@@ -237,76 +269,17 @@ public class MainActivity extends AppCompatActivity{
 
         animation_idle = (AnimationDrawable) sprite.getDrawable();
         animation_idle.stop();
+        idleAnimationRunning = false;
     }
 
-    private void changeText(TextView view, String string){
-        view.setText(string);
-    }
-
-    // This portion of the code is for Google Fit Connection
-    private void requestConnection(){
-        Log.d("MainActivity","STARTED: requestConnection");
-        Intent service = new Intent(this, GoogleFitSync.class);
-        service.putExtra(GoogleFitSync.TYPE_REQUEST_CONNECTION, GoogleFitSync.TYPE_TRUE);
-        service.putExtra(GoogleFitSync.TYPE_GET_STEP_DATA, GoogleFitSync.TYPE_TRUE);
-        startService(service);
-    }
-
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "Executing Connection onReceive");
-            if(intent.hasExtra(GoogleFitSync.FIT_EXTRA_NOTIFY_FAILED_STATUS_CODE)&&
-                    intent.hasExtra(GoogleFitSync.FIT_EXTRA_NOTIFY_FAILED_STATUS_CODE)){
-                int errorCode = intent.getIntExtra(GoogleFitSync.FIT_EXTRA_NOTIFY_FAILED_STATUS_CODE, 0);
-                PendingIntent pendingIntent = intent.getParcelableExtra(GoogleFitSync.FIT_EXTRA_NOTIFY_FAILED_INTENT);
-
-                ConnectionResult result = new ConnectionResult(errorCode, pendingIntent);
-                Log.d(TAG, "Fit connection failed - opening connect screen.");
-                fitHandleFailedConnection(result);
-            }
-
-            if(intent.hasExtra(GoogleFitSync.FIT_EXTRA_CONNECTION_MESSAGE)){
-                Log.d(TAG, "Fit connection successful - closing connect screen if it's open.");
-                fitHandleConnection();
-            }
-        }
-    };
-
-    private void fitHandleConnection(){
-        Log.e(TAG, "Fit connected");
-    }
-
-    private void fitHandleFailedConnection(ConnectionResult result) {
-        Log.i(TAG, "Google Fit Connection failed. Cause: " + result.toString());
-        if (!result.hasResolution()) {
-            Log.e(TAG, "Google Fit connection failed not due to false hasResolution");
-            return;
-        }
-        if (!authInProgress) {
-            if (result.getErrorCode() == FitnessStatusCodes.NEEDS_OAUTH_PERMISSIONS) {
-                try {
-                    Log.d(TAG, "Google Fit connection failed with OAuth failure. trying to ask for consent(again)");
-                    result.startResolutionForResult(MainActivity.this, REQUEST_OAUTH);
-                } catch (IntentSender.SendIntentException e) {
-                    Log.e(TAG, "Activity Thread Google Fit Exception while starting resolution activity", e);
-                }
-            } else {
-                try {
-                    Log.i(TAG, "Activity thread Google Fit Attempting to resolve failed connection");
-                    result.startResolutionForResult(MainActivity.this, REQUEST_OAUTH);
-                } catch (IntentSender.SendIntentException e) {
-                    Log.e(TAG, "Activity Thread Google Fit Exception while starting resolution activity", e);
-                }
-            }
-        }
-    }
 
     // This portion of the code is for saving and loading of game data.
     public void saveSpirits(){
         SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-        editor.putString("spiritName", GameService.UserSpirit.getName());
         editor.putInt("stepCount", GameService.UserSpirit.getStepCount());
+        editor.putInt("register", GameService.UserSpirit.getRegister());
+        editor.putInt("affinityLevel", GameService.UserSpirit.getAffinityLevel());
+        editor.putInt("affinityPoint", GameService.UserSpirit.getAffinityPoint());
 
         editor.putLong("startTime", GameService.UserSpirit.getStartTime());
         editor.putLong("endTime", GameService.UserSpirit.getEndTime());
@@ -360,6 +333,60 @@ public class MainActivity extends AppCompatActivity{
             default:
                 Log.d(PTAG, "No spirit detected");
         }
+    }
+
+    private static final String WEAR = "AndroidWear";
+
+    public void requestWearConnection(){
+        mGoogleWearClient = new GoogleApiClient.Builder(this)
+                .addApi(Wearable.API)
+                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                    @Override
+                    public void onConnected(@Nullable Bundle bundle) {
+                        Log.d(WEAR,"onConnected: "+bundle);
+                        sendWearData();
+                    }
+
+                    @Override
+                    public void onConnectionSuspended(int i) {
+                        Log.d(WEAR, "onConnectionSuspended: " + i);
+                    }
+                })
+                .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        Log.d(WEAR, "onConnectionFailed: " + connectionResult);
+                    }
+                })
+                .build();
+        mGoogleWearClient.connect();
+
+        sendWearData();
+    }
+
+    public void sendWearData(){
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        int restoredRegister = prefs.getInt("register", -99999);
+        int restoredAffinityLevel = prefs.getInt("affinityLevel", -99);
+        int restoredAffinityPoint = prefs.getInt("affinityPoint", -99);
+
+        PutDataMapRequest req = PutDataMapRequest.create("/phoneData");
+        req.getDataMap().putInt("register", restoredRegister);
+        req.getDataMap().putInt("affinityLevel", restoredAffinityLevel);
+        req.getDataMap().putInt("affinityPoint", restoredAffinityPoint);
+        req.getDataMap().putLong("time", new Date().getTime());
+
+        PutDataRequest putDataRequest = req.asPutDataRequest();
+        putDataRequest.setUrgent();
+
+        PendingResult<DataApi.DataItemResult> pendingResult = Wearable.DataApi.putDataItem(mGoogleWearClient,putDataRequest);
+
+        pendingResult.setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
+            @Override
+            public void onResult(@NonNull DataApi.DataItemResult dataItemResult) {
+                Log.e("AndroidWear", "Result sent");
+            }
+        });
     }
 
     // This portion of the code is for double tap back to exit.

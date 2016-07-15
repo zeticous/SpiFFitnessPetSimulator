@@ -50,6 +50,7 @@ public class GameService extends Service {
             loadSpirits();
         }
 
+        updateAffinityPoint();
         int affinityLevel = UserSpirit.getAffinityLevel();
 
         if (UserSpirit.evolveCheck(affinityLevel)) {
@@ -130,7 +131,7 @@ public class GameService extends Service {
     public static void updateAffinityPoint(){
         int affinityLevel = UserSpirit.getAffinityLevel();
         int stepCount = UserSpirit.getStepCount();
-        int affinityPoint = (stepCount - FACTOR*affinityLevel)/FACTOR;
+        int affinityPoint = stepCount/FACTOR - affinityLevel;
 
         /*Log.d("GAMESERVICE", "AffinityLevel: " + affinityLevel);
         Log.d("GAMESERVICE", "StepCount: " + stepCount);
@@ -211,13 +212,13 @@ public class GameService extends Service {
         editor.putLong("startTime", UserSpirit.getStartTime());
         editor.putLong("endTime", UserSpirit.getEndTime());
 
-        editor.commit();
+        editor.apply();
         Log.d(PTAG, "Shared Preference saved");
     }
 
     private static final String WEAR = "AndroidWear";
 
-    private void requestWearConnection(){
+    public void requestWearConnection(){
         mGoogleWearClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
@@ -244,16 +245,16 @@ public class GameService extends Service {
         sendWearData();
     }
 
-    private void sendWearData(){
+    public void sendWearData(){
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         int restoredRegister = prefs.getInt("register", -99999);
         int restoredAffinityLevel = prefs.getInt("affinityLevel", -99);
-        int restoredAffinityPoint = prefs.getInt("affinityPoint", -99);
+        int restoredStepCount = prefs.getInt("stepCount", -99);
 
         PutDataMapRequest req = PutDataMapRequest.create("/data");
         req.getDataMap().putInt("register", restoredRegister);
         req.getDataMap().putInt("affinityLevel", restoredAffinityLevel);
-        req.getDataMap().putInt("affinityPoint", restoredAffinityPoint);
+        req.getDataMap().putInt("stepCount", restoredStepCount);
         req.getDataMap().putLong("time", new Date().getTime());
 
         PutDataRequest putDataRequest = req.asPutDataRequest();

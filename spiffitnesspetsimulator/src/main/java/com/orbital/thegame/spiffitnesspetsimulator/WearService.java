@@ -1,7 +1,6 @@
 package com.orbital.thegame.spiffitnesspetsimulator;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -22,7 +21,7 @@ public class WearService extends WearableListenerService {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "WearService started");
+        //Log.d(TAG, "WearService started");
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
                 .build();
@@ -48,7 +47,7 @@ public class WearService extends WearableListenerService {
             }
         }
 
-        Toast.makeText(this, "WearService started", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "WearService started", Toast.LENGTH_SHORT).show();
         for (DataEvent event : dataEvents) {
             if (event.getType() == DataEvent.TYPE_CHANGED) {
                 DataItem item = event.getDataItem();
@@ -64,8 +63,8 @@ public class WearService extends WearableListenerService {
 
     private void setUpData(DataMap dataMap) {
         MainActivity.affinityLevel = dataMap.getInt("affinityLevel");
-        MainActivity.affinityPoint = dataMap.getInt("affinityPoint");
+        MainActivity.stepCount = dataMap.getInt("stepCount");
         MainActivity.register = dataMap.getInt("register");
-        //saveSpirit();
+        MainActivity.updateAffinityPoint();
     }
 }

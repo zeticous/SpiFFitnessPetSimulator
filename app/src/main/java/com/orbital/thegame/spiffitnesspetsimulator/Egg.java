@@ -11,7 +11,7 @@ public class Egg extends Spirits{
         super();
         startConstructor();
         setStartTime(cal.getTimeInMillis());
-        cal.add(Calendar.DAY_OF_WEEK, 1);
+        cal.add(Calendar.MINUTE, 5);
         setEndTime(cal.getTimeInMillis());
     }
 
