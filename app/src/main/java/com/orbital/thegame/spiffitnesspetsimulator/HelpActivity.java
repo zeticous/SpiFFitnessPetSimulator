@@ -26,10 +26,10 @@ public class HelpActivity extends AppCompatActivity {
         babyStageTutBtn.setVisibility(View.GONE);
         releaseTutBtn.setVisibility(View.GONE);
 
-        if(settings.getBoolean("tutorial2", true)){
+        if(settings.getBoolean("tutorial2", false)){
             babyStageTutBtn.setVisibility(View.VISIBLE);
         }
-        if(settings.getBoolean("tutorial3", true)){
+        if(settings.getBoolean("tutorial3", false)){
             releaseTutBtn.setVisibility(View.VISIBLE);
         }
 

@@ -55,6 +55,16 @@ public class Spirits {
         this.firstAdult = firstAdult;
     }
 
+    protected boolean justEvolved = false;
+
+    public boolean isJustEvolved() {
+        return justEvolved;
+    }
+
+    public void setJustEvolved(boolean justEvolved) {
+        this.justEvolved = justEvolved;
+    }
+
     protected int stepCount;
     protected int affinityLevel;
     protected int affinityPoint;

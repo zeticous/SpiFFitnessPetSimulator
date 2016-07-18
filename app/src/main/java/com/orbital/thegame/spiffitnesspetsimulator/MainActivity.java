@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity{
 
     private AnimationDrawable animation_idle, animation_happy;
     private boolean happyAnimationRunning = false;
-    private boolean idleAnimationRunning = false;
 
     GoogleApiClient mGoogleWearClient;
 
@@ -84,23 +83,11 @@ public class MainActivity extends AppCompatActivity{
                 }
 
                 if (!happyAnimationRunning) {
-                    stopAnimation();
                     startHappyAnimation();
                 }
 
                 levelCount.setText(""+ GameService.UserSpirit.getAffinityLevel());
                 affinityPointCount.setText("" + GameService.UserSpirit.getAffinityPoint());
-
-                long delay = 5000;
-
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        stopAnimation();
-                        startIdleAnimation();
-                    }
-                },delay);
             }
         });
 
@@ -157,7 +144,7 @@ public class MainActivity extends AppCompatActivity{
             public void run() {
                 try {
                     while (!isInterrupted()) {
-                        Thread.sleep(10000);
+                        Thread.sleep(1000);
 
                         runOnUiThread(new Runnable() {
                             @Override
@@ -174,8 +161,11 @@ public class MainActivity extends AppCompatActivity{
                                     Log.e("Tutorial","IllegalStateException due to no running activity");
                                 }
 
-                                stopAnimation();
-                                startIdleAnimation();
+                                if (GameService.UserSpirit.isJustEvolved()){
+                                    stopAnimation();
+                                    startIdleAnimation();
+                                    GameService.UserSpirit.setJustEvolved(false);
+                                }
 
                                 assert levelCount != null;
                                 assert affinityPointCount != null;
@@ -234,7 +224,6 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void startIdleAnimation(){
-        idleAnimationRunning = true;
         ImageButton sprite = (ImageButton) findViewById(R.id.sprite);
         assert sprite != null;
         sprite.setImageResource(GameService.UserSpirit.getAnimation_idle());
@@ -259,6 +248,8 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void run() {
                 happyAnimationRunning = false;
+                stopAnimation();
+                startIdleAnimation();
             }
         },delay);
     }
@@ -269,7 +260,6 @@ public class MainActivity extends AppCompatActivity{
 
         animation_idle = (AnimationDrawable) sprite.getDrawable();
         animation_idle.stop();
-        idleAnimationRunning = false;
     }
 
 

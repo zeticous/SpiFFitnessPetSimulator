@@ -34,7 +34,7 @@ public class GameService extends Service {
     public static Spirits UserSpirit;
     int stepCount;
     public static final int FACTOR = 2;
-    public static final String MY_PREFS_NAME = "MyPrefsFile";
+    public static final String MY_PREFS_NAME = "GameSaveFile";
 
     private final int mId = 1314520;
 
@@ -57,6 +57,7 @@ public class GameService extends Service {
             String nameBefore, nameAfter, message;
             nameBefore = UserSpirit.getName();
             UserSpirit = UserSpirit.evolve(affinityLevel);
+            UserSpirit.setJustEvolved(true);
             nameAfter = UserSpirit.getName();
 
             if (UserSpirit.getRegister() == Spirits.PANDA_ADULT_REG
@@ -77,8 +78,6 @@ public class GameService extends Service {
             sendNotification(message);
         }
 
-        requestGoogleFitSync();
-
         if (UserSpirit.runCheck()) {
             String name = UserSpirit.getName();
             UserSpirit = UserSpirit.initialise();
@@ -91,9 +90,10 @@ public class GameService extends Service {
             sendNotification(message);
         }
 
+        requestGoogleFitSync();
         saveSpirits();
-
         requestWearConnection();
+
         return START_NOT_STICKY;
     }
 

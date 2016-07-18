@@ -39,6 +39,7 @@ public class MainActivity extends WearableActivity implements GoogleApiClient.Co
     public static int affinityLevel, stepCount, register, affinityPoint;
     public int animationIdle, animationHappy;
     private AnimationDrawable animation;
+    private boolean happyAnimationRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +69,10 @@ public class MainActivity extends WearableActivity implements GoogleApiClient.Co
 
 
     private void handleOnClick(){
-        stopAnimation();
-        startHappyAnimation();
+        if (!happyAnimationRunning) {
+            startHappyAnimation();
+        }
+
         TextView levelCount = (TextView) findViewById(R.id.watch_level_count);
         TextView pointCount = (TextView) findViewById(R.id.watch_affinity_point);
 
@@ -82,17 +85,6 @@ public class MainActivity extends WearableActivity implements GoogleApiClient.Co
         pointCount.setText("" + affinityPoint);
 
         sendData(affinityLevel, stepCount);
-
-        long delay = 5000;
-
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                stopAnimation();
-                startIdleAnimation();
-            }
-        },delay);
     }
 
     private void sendData(int affinityLevel, int stepCount){
@@ -147,9 +139,6 @@ public class MainActivity extends WearableActivity implements GoogleApiClient.Co
                                 TextView levelCount = (TextView) findViewById(R.id.watch_level_count);
                                 TextView pointCount = (TextView) findViewById(R.id.watch_affinity_point);
 
-                                stopAnimation();
-                                startIdleAnimation();
-
                                 levelCount.setText("" + affinityLevel);
                                 pointCount.setText("" + affinityPoint);
                             }
@@ -173,12 +162,25 @@ public class MainActivity extends WearableActivity implements GoogleApiClient.Co
     }
 
     private void startHappyAnimation(){
+        happyAnimationRunning = true;
         ImageView sprite = (ImageView) findViewById(R.id.watch_sprite);
         assert sprite != null;
         sprite.setImageResource(animationHappy);
 
         animation = (AnimationDrawable) sprite.getDrawable();
         animation.start();
+
+        long delay = 5000;
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                happyAnimationRunning = false;
+                stopAnimation();
+                startIdleAnimation();
+            }
+        },delay);
     }
 
     private void stopAnimation(){
