@@ -27,7 +27,8 @@
             android:name=".MenuActivity"
             android:theme="@style/ActivityTheme"
             android:screenOrientation="portrait"/>
-        <activity android:name=".HelpActivity"/>
+        <activity android:name=".HelpActivity"
+                  android:screenOrientation="portrait"/>
 
         <service
             android:name=".GoogleFitSync"
