@@ -75,6 +75,7 @@ public class GameService extends Service {
             //NOTIFICATION FOR EVOLUTION
             message = "Your " + nameBefore + " has evolved to " + nameAfter + "!!";
             sendNotification(message);
+            UserSpirit.setJustEvolved(true);
         }
 
         requestGoogleFitSync();

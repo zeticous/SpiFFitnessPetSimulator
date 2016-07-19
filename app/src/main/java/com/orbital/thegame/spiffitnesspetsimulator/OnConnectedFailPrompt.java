@@ -11,16 +11,13 @@ public class OnConnectedFailPrompt extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-        builder.setView(R.layout.connection_failed_prompt);
-
+        builder.setMessage("Connection failed. Please try again.");
         builder.setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dismiss();
             }
         });
-
         return builder.create();
     }
 }

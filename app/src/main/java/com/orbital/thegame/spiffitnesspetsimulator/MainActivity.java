@@ -174,8 +174,11 @@ public class MainActivity extends AppCompatActivity{
                                     Log.e("Tutorial","IllegalStateException due to no running activity");
                                 }
 
-                                stopAnimation();
-                                startIdleAnimation();
+                                if (GameService.UserSpirit.isJustEvolved()){
+                                    stopAnimation();
+                                    startIdleAnimation();
+                                    GameService.UserSpirit.setJustEvolved(false);
+                                }
 
                                 assert levelCount != null;
                                 assert affinityPointCount != null;
@@ -259,6 +262,8 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void run() {
                 happyAnimationRunning = false;
+                stopAnimation();
+                startIdleAnimation();
             }
         },delay);
     }

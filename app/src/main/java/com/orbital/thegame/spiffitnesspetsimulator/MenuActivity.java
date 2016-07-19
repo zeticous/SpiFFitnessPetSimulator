@@ -1,5 +1,6 @@
 package com.orbital.thegame.spiffitnesspetsimulator;
 
+import android.app.FragmentManager;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -33,8 +34,10 @@ public class MenuActivity extends AppCompatActivity {
 
         releaseButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                GameService.UserSpirit = GameService.UserSpirit.initialise();
-                finish();
+                FragmentManager fm = getFragmentManager();
+                releaseButtonDialog releaseDialog = new releaseButtonDialog();
+                releaseDialog.setRetainInstance(true);
+                releaseDialog.show(fm, "fragment_name");
             }
         });
 
