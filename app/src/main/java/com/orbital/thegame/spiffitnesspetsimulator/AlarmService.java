@@ -47,7 +47,7 @@ public class AlarmService extends Service {
             AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             Intent intent = new Intent (ALARM_RECEIVE);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0,intent,0);
-            alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000*60, pendingIntent);
+            alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000*10, pendingIntent);
         }
     }
 
