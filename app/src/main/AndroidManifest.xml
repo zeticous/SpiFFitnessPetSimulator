@@ -20,13 +20,12 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
+            android:theme="@style/AppTheme"
             android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".MenuActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".RecordsActivity"
+            android:theme="@style/ActivityTheme"
             android:screenOrientation="portrait"/>
         <activity android:name=".HelpActivity"/>
 
@@ -67,12 +66,15 @@
         </service>
 
         <activity android:name=".welcomeActivity"
+                  android:theme="@style/ActivityTheme"
                   android:screenOrientation="portrait">
         </activity>
         <activity android:name=".connectActivity"
+                  android:theme="@style/ActivityTheme"
                   android:screenOrientation="portrait">
         </activity>
         <activity android:name=".firstLaunchActivity"
+                  android:theme="@style/ActivityTheme"
                   android:screenOrientation="portrait">
         </activity>
         <activity android:name=".launcherActivity"

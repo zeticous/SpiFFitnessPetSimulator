@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 public class AlarmService extends Service {
     private final static String LOG = "GameService";
@@ -22,7 +21,6 @@ public class AlarmService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(LOG, "STARTED: onStartCommand");
-        Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show();
         alarmManager = new AlarmReceiver();
         registerReceiver(alarmManager, intentFilter);
         alarmManager.setAlarm(this);

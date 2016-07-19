@@ -33,7 +33,7 @@ import java.util.Date;
 public class GameService extends Service {
     public static Spirits UserSpirit;
     int stepCount;
-    public static final int FACTOR = 2;
+    public static final int FACTOR = 200;
     public static final String MY_PREFS_NAME = "MyPrefsFile";
 
     private final int mId = 1314520;

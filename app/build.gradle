@@ -6,10 +6,10 @@ android {
 
     defaultConfig {
         applicationId "com.orbital.thegame.spiffitnesspetsimulator"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
-        versionName "0.4b"
+        versionName "0.5.0"
         multiDexEnabled true
     }
     buildTypes {

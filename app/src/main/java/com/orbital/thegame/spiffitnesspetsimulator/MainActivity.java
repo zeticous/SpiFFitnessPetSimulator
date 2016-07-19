@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity{
         ImageButton sprite = (ImageButton) findViewById(R.id.sprite);
         ImageButton menu = (ImageButton) findViewById(R.id.menu);
         ImageButton help = (ImageButton) findViewById(R.id.help);
-        ImageButton record = (ImageButton) findViewById(R.id.record);
 
         final TextView levelCount = (TextView) findViewById(R.id.level_count);
         final TextView affinityPointCount = (TextView) findViewById(R.id.experience);
@@ -84,8 +83,18 @@ public class MainActivity extends AppCompatActivity{
                 }
 
                 if (!happyAnimationRunning) {
-                    stopAnimation();
                     startHappyAnimation();
+
+                    long delay = 5000;
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            happyAnimationRunning = false;
+                            stopAnimation();
+                            startIdleAnimation();
+                        }
+                    },delay);
                 }
 
                 levelCount.setText(""+ GameService.UserSpirit.getAffinityLevel());
@@ -108,14 +117,6 @@ public class MainActivity extends AppCompatActivity{
         menu.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, MenuActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        assert record != null;
-        record.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, RecordsActivity.class);
                 startActivity(intent);
             }
         });
@@ -254,18 +255,6 @@ public class MainActivity extends AppCompatActivity{
 
         animation_happy = (AnimationDrawable) sprite.getDrawable();
         animation_happy.start();
-
-        long delay = 5000;
-
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                happyAnimationRunning = false;
-                stopAnimation();
-                startIdleAnimation();
-            }
-        },delay);
     }
 
     private void stopAnimation(){

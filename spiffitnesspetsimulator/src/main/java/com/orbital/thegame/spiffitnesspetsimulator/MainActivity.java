@@ -23,7 +23,7 @@ import java.util.Date;
 
 public class MainActivity extends WearableActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
 
-    public static final int FACTOR = 2;
+    public static final int FACTOR = 200;
     public static final int EGG_REG = 10000;
 
     public static final int PIG_BABY_REG = 10001;

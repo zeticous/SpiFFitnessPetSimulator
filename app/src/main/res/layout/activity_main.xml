@@ -1,39 +1,14 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
-    android:orientation="vertical"
+    android:background="@drawable/test"
     tools:context="com.orbital.thegame.spiffitnesspetsimulator.MainActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="14">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/background"
-            android:scaleType="centerCrop"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true" />
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/sprite"
-            android:src="@drawable/sprit_slime_idle1"
-            android:background="@android:color/transparent"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:layout_margin="16dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -41,22 +16,30 @@
             android:textSize="24sp"
             android:textColor="#FFFFFF"
             android:text="Affinity:"
-            android:id="@+id/affinity_title"
-            android:layout_centerVertical="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="8dp"/>
+            android:textStyle="bold"
+            android:id="@+id/affinity_title"/>
 
         <TextView
             android:id="@+id/experience"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:text="0"
             android:textSize="24sp"
             android:textColor="#FFFFFF"
-            android:layout_alignBaseline="@+id/affinity_title"
-            android:layout_alignBottom="@+id/affinity_title"
-            android:layout_toEndOf="@+id/affinity_title"
-            android:layout_marginLeft="8dp"/>
+            android:textStyle="bold"
+            android:layout_toEndOf="@id/affinity_title"
+            android:layout_marginStart="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Lv"
+            android:id="@+id/level_header"
+            android:textSize="24sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:layout_below="@id/affinity_title"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -65,55 +48,40 @@
             android:id="@+id/level_count"
             android:textSize="24sp"
             android:textColor="#FFFFFF"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="8dp"/>
+            android:layout_alignBottom="@id/level_header"
+            android:layout_toEndOf="@id/level_header"
+            android:layout_marginStart="8dp"/>
 
-        <TextView
+        <ImageButton
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/button_help"
+            android:background="@android:color/transparent"
+            android:id="@+id/help"
+            android:scaleType="fitStart"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"/>
+
+        <ImageButton
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/button_gallery"
+            android:background="@android:color/transparent"
+            android:id="@+id/menu"
+            android:scaleType="fitStart"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"/>
+
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Lv"
-            android:id="@+id/level_header"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/level_count"
-            android:textSize="24sp"
-            android:textColor="#FFFFFF"
-            android:layout_marginRight="8dp"/>
+            android:paddingBottom="8dp"
+            android:id="@+id/sprite"
+            android:src="@drawable/penguin_adult_idle1"
+            android:background="@android:color/transparent"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"/>
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/button_menu"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            android:layout_weight="1"
-            android:id="@+id/menu" />
-
-        <ImageButton
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/button_help"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            android:layout_weight="1"
-            android:id="@+id/help" />
-
-        <ImageButton
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/button_gallery"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            android:layout_weight="1"
-            android:id="@+id/record" />
-
-    </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

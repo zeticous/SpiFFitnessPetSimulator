@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
+import android.widget.RelativeLayout;
 
 public class HelpActivity extends AppCompatActivity {
 
@@ -14,17 +14,17 @@ public class HelpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
-        Button navigationBtn = (Button) findViewById(R.id.btnNavigation);
-        Button babyStageTutBtn = (Button) findViewById(R.id.btnDetails);
-        Button releaseTutBtn = (Button) findViewById(R.id.btnReleseDetails);
+        RelativeLayout navigationBtn = (RelativeLayout) findViewById(R.id.btnNavigation);
+        RelativeLayout babyStageTutBtn = (RelativeLayout) findViewById(R.id.btnDetails);
+        RelativeLayout releaseTutBtn = (RelativeLayout) findViewById(R.id.btnReleseDetails);
 
         assert navigationBtn != null;
         assert babyStageTutBtn != null;
         assert releaseTutBtn != null;
 
         SharedPreferences settings = getSharedPreferences("GameSettings", 0);
-        babyStageTutBtn.setVisibility(View.GONE);
-        releaseTutBtn.setVisibility(View.GONE);
+        babyStageTutBtn.setVisibility(View.INVISIBLE);
+        releaseTutBtn.setVisibility(View.INVISIBLE);
 
         if(settings.getBoolean("tutorial2", false)){
             babyStageTutBtn.setVisibility(View.VISIBLE);
@@ -59,5 +59,11 @@ public class HelpActivity extends AppCompatActivity {
                 releaseTutorial.show(fm, "fragment_name");
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
     }
 }
