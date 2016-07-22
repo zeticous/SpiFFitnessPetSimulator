@@ -3,6 +3,7 @@ package com.orbital.thegame.spiffitnesspetsimulator;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -57,11 +58,16 @@ public class MainActivity extends AppCompatActivity{
         ImageButton menu = (ImageButton) findViewById(R.id.menu);
         ImageButton help = (ImageButton) findViewById(R.id.help);
 
+        Typeface font = Typeface.createFromAsset(getAssets(), "DKBlueSheep.ttf");
+
         final TextView levelCount = (TextView) findViewById(R.id.level_count);
         final TextView affinityPointCount = (TextView) findViewById(R.id.experience);
 
         assert levelCount != null;
         assert affinityPointCount != null;
+
+        levelCount.setTypeface(font);
+        affinityPointCount.setTypeface(font);
 
         levelCount.setText(""+ affinityLevel);
         affinityPointCount.setText("" + affinityPoint);

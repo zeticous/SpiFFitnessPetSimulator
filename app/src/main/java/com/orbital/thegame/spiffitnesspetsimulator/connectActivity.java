@@ -1,5 +1,7 @@
 package com.orbital.thegame.spiffitnesspetsimulator;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.FragmentManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -14,7 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.RelativeLayout;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.fitness.FitnessStatusCodes;
@@ -31,13 +33,30 @@ public class connectActivity extends AppCompatActivity {
         setContentView(R.layout.activity_connect);
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter((GoogleFitSync.FIT_NOTIFY_INTENT)));
+        RelativeLayout welcome_view = (RelativeLayout) findViewById(R.id.welcome_view);
 
-        Button button = (Button) findViewById(R.id.connect_button);
-        assert button != null;
-        button.setOnClickListener(new View.OnClickListener() {
+        if (welcome_view != null)
+            welcome_view.setVisibility(View.GONE);
+
+        Button connectButton = (Button) findViewById(R.id.connect_button);
+        Button startButton = (Button) findViewById(R.id.start_button);
+
+        assert connectButton!=null;
+        assert startButton!=null;
+
+        connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 requestConnection();
+            }
+        });
+
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(connectActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }
@@ -75,11 +94,35 @@ public class connectActivity extends AppCompatActivity {
         Log.e(TAG, "Fit connected");
         SharedPreferences settings = getSharedPreferences("GameSettings", 0);
         if (settings.getBoolean("firstLaunch", true)) {
-            Toast.makeText(this, "Google Fit Connected", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(connectActivity.this, welcomeActivity.class);
-            startActivity(intent);
-            finish();
+            changeView();
         }
+    }
+
+    private void changeView(){
+        RelativeLayout welcome_view = (RelativeLayout) findViewById(R.id.welcome_view);
+        final RelativeLayout connect_view = (RelativeLayout) findViewById(R.id.connect_view);
+        int duration = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+        assert welcome_view!=null;
+        assert connect_view!=null;
+
+        welcome_view.setAlpha(0f);
+        welcome_view.setVisibility(View.VISIBLE);
+
+        welcome_view.animate()
+                .alpha(1f)
+                .setDuration(duration)
+                .setListener(null);
+
+        connect_view.animate()
+                .alpha(0f)
+                .setDuration(duration)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        connect_view.setVisibility(View.GONE);
+                    }
+                });
     }
 
     private void fitHandleFailedConnection(ConnectionResult result) {

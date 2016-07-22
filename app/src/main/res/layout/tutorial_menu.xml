@@ -48,9 +48,21 @@
             android:layout_marginTop="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="This shows your current step count. \nStep count will be used to gain affinity to level up your Spirits!\nThe value will reset upon evolving to baby Spirit which takes 3 days.
-        \nThe level of the Egg will determine the species it will evolve into.   "
-            android:id="@+id/textView2"
+            android:text="This shows your current step count."
+            android:textSize="18sp"/>
+
+        <TextView
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Step count will be used to gain affinity to level up your Spirits! Affinity and levels will reset after evolution."
+            android:textSize="18sp"/>
+
+        <TextView
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="An Spirit Egg takes up to 3 days to hatch, so be patient."
             android:textSize="18sp"/>
 
         <ImageView
@@ -58,17 +70,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/notificationsImageView"
-            android:src="@drawable/notifications"
+            android:src="@drawable/collections"
             android:adjustViewBounds="true"/>
 
         <TextView
             android:layout_marginTop="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Turn on or off notifications for updates on your Spirits "
+            android:text="For a start, hatch your egg to add your first Spirit into your collection! Good luck!"
             android:id="@+id/notifications_textView"
             android:textSize="18sp"
-            android:paddingBottom="20dp"/>
+            android:paddingBottom="32dp"/>
 
     </LinearLayout>
 

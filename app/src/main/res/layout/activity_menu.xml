@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/test"
+    android:background="@drawable/first_launch_background"
     android:padding="16dp"
     android:orientation="vertical"
     tools:context="com.orbital.thegame.spiffitnesspetsimulator.MenuActivity">
@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/spiritIcon"
-            android:src="@drawable/penguin_adult_idle1"
+            android:src="@drawable/panda_adult_idle1"
             android:adjustViewBounds="true"/>
 
         <LinearLayout
@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="penguinAdult"
+                android:text="Kuu Kitsune"
                 android:textStyle="bold"
                 android:layout_weight="0.5"
                 android:id="@+id/species_name"
@@ -51,7 +51,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
-                    android:src="@drawable/view_fullheart"
+                    android:src="@drawable/steps_icon"
                     android:id="@+id/affinity_label"
                     android:adjustViewBounds="true"/>
                 <TextView
@@ -60,7 +60,7 @@
                     android:layout_weight="0.7"
                     android:gravity="center"
                     android:id="@+id/maxExp"
-                    android:text="32415"
+                    android:text="9"
                     android:textColor="@android:color/white"
                     android:textSize="32sp"
                     android:singleLine="true"/>
@@ -90,15 +90,27 @@
         android:layout_weight="0.6"
         android:orientation="vertical"
         android:layout_marginTop="16dp">
-        <TextView
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Collections"
-            android:textStyle="bold"
-            android:singleLine="true"
-            android:textColor="@android:color/white"
-            android:textSize="40sp"/>
+            android:gravity="center">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/gallery_icon"
+                android:layout_marginEnd="8dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Collections"
+                android:textStyle="bold"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textSize="40sp"
+                android:id="@+id/collectionsHeader"/>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

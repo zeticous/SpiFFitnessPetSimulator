@@ -3,10 +3,12 @@ package com.orbital.thegame.spiffitnesspetsimulator;
 
 import android.app.FragmentManager;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class HelpActivity extends AppCompatActivity {
 
@@ -17,6 +19,8 @@ public class HelpActivity extends AppCompatActivity {
         RelativeLayout navigationBtn = (RelativeLayout) findViewById(R.id.btnNavigation);
         RelativeLayout babyStageTutBtn = (RelativeLayout) findViewById(R.id.btnDetails);
         RelativeLayout releaseTutBtn = (RelativeLayout) findViewById(R.id.btnReleseDetails);
+
+        fontSetUp();
 
         assert navigationBtn != null;
         assert babyStageTutBtn != null;
@@ -65,5 +69,24 @@ public class HelpActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         this.finish();
+    }
+
+    private void fontSetUp(){
+        TextView header = (TextView) findViewById(R.id.help_header);
+        TextView basics = (TextView) findViewById(R.id.basics);
+        TextView firstBaby = (TextView) findViewById(R.id.firstBaby);
+        TextView releaseSpirit = (TextView) findViewById(R.id.releaseSpirit);
+
+        Typeface font = Typeface.createFromAsset(getAssets(), "DKBlueSheep.ttf");
+
+        assert header!=null;
+        assert basics !=null;
+        assert firstBaby !=null;
+        assert releaseSpirit!=null;
+
+        header.setTypeface(font);
+        basics.setTypeface(font);
+        firstBaby.setTypeface(font);
+        releaseSpirit.setTypeface(font);
     }
 }

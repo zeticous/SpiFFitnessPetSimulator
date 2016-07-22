@@ -2,6 +2,7 @@ package com.orbital.thegame.spiffitnesspetsimulator;
 
 import android.app.FragmentManager;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,12 +19,20 @@ public class MenuActivity extends AppCompatActivity {
         TextView expCount = (TextView) findViewById(R.id.maxExp);
         TextView speciesName = (TextView) findViewById(R.id.species_name);
         TextView releaseButton = (TextView) findViewById(R.id.release_button);
+        TextView collections = (TextView) findViewById(R.id.collectionsHeader);
+
+        Typeface font = Typeface.createFromAsset(getAssets(), "DKBlueSheep.ttf");
 
         handleCollections();
 
         assert expCount != null;
         assert speciesName != null;
         assert releaseButton != null;
+        assert collections != null;
+
+        expCount.setTypeface(font);
+        speciesName.setTypeface(font);
+        collections.setTypeface(font);
 
         if (!GameService.UserSpirit.isAdult){
             releaseButton.setVisibility(View.GONE);
@@ -88,22 +97,22 @@ public class MenuActivity extends AppCompatActivity {
 
         SharedPreferences settings = getSharedPreferences("GameSettings", 0);
         if (!settings.getBoolean("pigBaby", false)){
-            babyPig.setVisibility(View.GONE);
+            babyPig.setImageResource(R.drawable.unknown);
         }
         if (!settings.getBoolean("penguinBaby", false)){
-            babyPenguin.setVisibility(View.GONE);
+            babyPenguin.setImageResource(R.drawable.unknown);
         }
         if (!settings.getBoolean("pandaBaby", false)){
-            babyPanda.setVisibility(View.GONE);
+            babyPanda.setImageResource(R.drawable.unknown);
         }
         if (!settings.getBoolean("pigAdult", false)){
-            adultPig.setVisibility(View.GONE);
+            adultPig.setImageResource(R.drawable.unknown);
         }
         if (!settings.getBoolean("penguinAdult", false)){
-            adultPenguin.setVisibility(View.GONE);
+            adultPenguin.setImageResource(R.drawable.unknown);
         }
         if (!settings.getBoolean("pandaAdult", false)){
-            adultPanda.setVisibility(View.GONE);
+            adultPanda.setImageResource(R.drawable.unknown);
         }
     }
 }

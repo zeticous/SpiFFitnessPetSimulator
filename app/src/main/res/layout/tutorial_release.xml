@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
+            android:layout_height="wrap_content">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -14,7 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Congratulations!"
+            android:text="Releasing a Spirit"
             android:id="@+id/congrats_textView"
             android:textSize="30sp"
             android:textStyle="bold"/>
@@ -23,7 +22,7 @@
             android:layout_marginTop="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Your Spirits is an adult now! It will be able to fend for itself, so let's release it to the wild."
+            android:text="Your Spirits is an adult now! It should be able to fend for itself, so let's release it back into the Spirit Realm."
             android:id="@+id/details_textView"
             android:textSize="18sp"/>
 
@@ -31,7 +30,7 @@
             android:layout_marginTop="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Go to the menu and click the release button as shown:"
+            android:text="Go to the menu and click the RELEASE button as shown:"
             android:id="@+id/menu_textView"
             android:textSize="18sp"/>
 
@@ -48,10 +47,23 @@
             android:layout_marginTop="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Upon clicking the release button, there will be no turning back.\nYour Spirits will be released into the wild and you will be given a new egg to start over.\nHave fun!"
+            android:text="Releasing the spirit is an irreversible process, so only release a spirit if you really wanted to."
             android:id="@+id/release_button_description"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Once you released your spirit into the Spirit Realm, you will be given a new egg to raise again."
+            android:textSize="18sp"/>
+
+        <TextView
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="This is the last tutorial. Have fun!"
             android:textSize="18sp"
             android:paddingBottom="20dp"/>
-
     </LinearLayout>
-</ScrollView>
+</LinearLayout>

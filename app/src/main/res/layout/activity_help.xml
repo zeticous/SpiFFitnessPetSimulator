@@ -2,7 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@android:color/black"
+    android:background="@drawable/first_launch_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
@@ -55,7 +55,8 @@
                 android:textColor="@android:color/white"
                 android:textSize="24sp"
                 android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"/>
+                android:layout_alignParentEnd="true"
+                android:id="@+id/basics"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -71,7 +72,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@drawable/pig_baby_idle1"
+                android:src="@drawable/panda_baby_idle1"
                 android:layout_alignParentTop="true"
                 android:layout_centerVertical="true"
                 android:adjustViewBounds="true"/>
@@ -85,7 +86,8 @@
                 android:textColor="@android:color/white"
                 android:textSize="24sp"
                 android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"/>
+                android:layout_alignParentEnd="true"
+                android:id="@+id/firstBaby"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -101,7 +103,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@drawable/pig_adult_happy1"
+                android:src="@drawable/panda_adult_happy1"
                 android:layout_alignParentTop="true"
                 android:layout_centerVertical="true"
                 android:adjustViewBounds="true"/>
@@ -110,12 +112,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Releasing a Spirit"
+                android:text="Releasing Spirits"
                 android:textAllCaps="true"
                 android:textColor="@android:color/white"
                 android:textSize="24sp"
                 android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"/>
+                android:layout_alignParentEnd="true"
+                android:id="@+id/releaseSpirit"/>
         </RelativeLayout>
 
 

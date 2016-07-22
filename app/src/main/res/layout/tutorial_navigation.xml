@@ -29,9 +29,10 @@
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:src="@drawable/affinity"
+                android:src="@drawable/navigation_1"
                 android:id="@+id/affinityImageView"
-                android:layout_weight="4"/>
+                android:layout_weight="2"
+                android:adjustViewBounds="true"/>
 
             <View
                 android:layout_width="0dp"
@@ -66,7 +67,7 @@
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:src="@drawable/level"
+                android:src="@drawable/navigation_2"
                 android:id="@+id/levelImage"
                 android:layout_weight="2"
                 android:adjustViewBounds="true"/>
@@ -104,8 +105,8 @@
 
             <ImageView
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/egg_idle"
+                android:layout_height="wrap_content"
+                android:src="@drawable/navigation_3"
                 android:id="@+id/clickButtonImage"
                 android:layout_weight="2"
                 android:adjustViewBounds="true"/>
@@ -121,7 +122,8 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Button"
                 android:id="@+id/clickButtonText"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:layout_gravity="center_vertical"/>
 
         </LinearLayout>
 
@@ -131,125 +133,8 @@
             android:text="Clicking it will level up the Spirit using affinity!"
             android:id="@+id/clickButtonDescription"
             android:textSize="18dp"
-            android:layout_marginTop="8dp"/>
-
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/menu"
-                android:id="@+id/menuImageView"
-                android:layout_weight="2"
-                android:adjustViewBounds="true"/>
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="10"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Menu"
-                android:id="@+id/menuTextView"
-                android:textStyle="bold"/>
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Click to go to Menu."
-            android:id="@+id/menuDescription"
-            android:textSize="18dp"
-            android:layout_marginTop="8dp"/>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/help"
-                android:id="@+id/helpImageView"
-                android:layout_weight="1.5"
-                android:adjustViewBounds="true"/>
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="10"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Help"
-                android:id="@+id/helpTextView"
-                android:textStyle="bold"/>
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Click to get Help."
-            android:id="@+id/helpDescription"
-            android:textSize="18dp"
-            android:layout_marginTop="8dp"/>
-
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/collections"
-                android:id="@+id/collectionsImageView"
-                android:layout_weight="2"
-                android:adjustViewBounds="true"/>
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="10"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Collections"
-                android:id="@+id/collectionsTextView"
-                android:textStyle="bold"/>
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Check out your collections of Spirits."
-            android:id="@+id/collectionsDescription"
-            android:textSize="18dp"
             android:layout_marginTop="8dp"
-            android:paddingBottom="25dp"/>
+            android:layout_marginBottom="32dp"/>
 
     </LinearLayout>
-
 </ScrollView>

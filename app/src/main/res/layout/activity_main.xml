@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/test"
+    android:background="@drawable/background"
     tools:context="com.orbital.thegame.spiffitnesspetsimulator.MainActivity">
 
     <RelativeLayout
@@ -10,25 +10,28 @@
         android:layout_height="match_parent"
         android:layout_margin="16dp">
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:textColor="#FFFFFF"
-            android:text="Affinity:"
-            android:textStyle="bold"
-            android:id="@+id/affinity_title"/>
+            android:id="@+id/affinity_layout">
 
-        <TextView
-            android:id="@+id/experience"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0"
-            android:textSize="24sp"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:layout_toEndOf="@id/affinity_title"
-            android:layout_marginStart="8dp"/>
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:scaleType="fitCenter"
+                android:id="@+id/affinity_title"
+                android:src="@drawable/heart_beige"
+                android:adjustViewBounds="true"/>
+
+            <TextView
+                android:id="@+id/experience"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="24sp"
+                android:textColor="#FFFFFF"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -39,7 +42,7 @@
             android:textSize="24sp"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
-            android:layout_below="@id/affinity_title"/>
+            android:layout_below="@id/affinity_layout"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -65,7 +68,7 @@
         <ImageButton
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/button_gallery"
+            android:src="@drawable/button_menu"
             android:background="@android:color/transparent"
             android:id="@+id/menu"
             android:scaleType="fitStart"
@@ -77,10 +80,11 @@
             android:layout_height="wrap_content"
             android:paddingBottom="8dp"
             android:id="@+id/sprite"
-            android:src="@drawable/penguin_adult_idle1"
+            android:src="@drawable/egg_idle1"
             android:background="@android:color/transparent"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true"
+            android:adjustViewBounds="true"/>
 
     </RelativeLayout>
 

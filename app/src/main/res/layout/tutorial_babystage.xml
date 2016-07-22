@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
     <LinearLayout
         android:orientation="vertical"
@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Congratulations!"
+            android:text="Your First Baby"
             android:id="@+id/congrats_textView"
             android:textSize="30sp"
             android:textStyle="bold"/>
@@ -23,52 +23,33 @@
             android:layout_marginTop="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Your egg has hatched into a baby Spirit!"
+            android:text="Your egg has hatched into a baby Spirit! Good job"
             android:id="@+id/details_textView"
             android:textSize="18sp"/>
 
-        <RelativeLayout
+
+        <TextView
             android:layout_marginTop="8dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:text="You can find your new spirit in collection by pressing the MENU button."
+            android:textSize="18sp"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/imageView"
-                android:src = "@drawable/collections_icon_small"
-                android:adjustViewBounds="true"
-                android:layout_centerVertical="true"
-                android:layout_alignParentStart="true"/>
-
-            <TextView
-                android:layout_marginLeft="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="You can check your collections of Spirits by clicking this button."
-                android:id="@+id/textView3"
-                android:textSize="18sp"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/imageView"/>
-
-        </RelativeLayout>
 
         <ImageView
             android:layout_margin="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/collectionsImage"
-            android:src = "@drawable/colletions_tut"
+            android:src = "@drawable/collections_tut"
             android:adjustViewBounds="true"
             />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Now for your Spirits to grow to an adult, it will need to be at level 20. All the best!"
+            android:text="Unlike the egg, the spirit will grow up and evolve shortly after you reach level 20. All the best!"
             android:id="@+id/collectionsDescription"
             android:textSize="18sp"/>
-
-
     </LinearLayout>
-</ScrollView>
+</LinearLayout>

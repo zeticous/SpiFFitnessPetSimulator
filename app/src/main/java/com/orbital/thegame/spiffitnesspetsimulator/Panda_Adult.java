@@ -16,7 +16,7 @@ public class Panda_Adult extends Spirit_Adult {
     private void startConstructor(){
         setAnimation_idle(R.drawable.panda_adult_idle);
         setAnimation_happy(R.drawable.panda_adult_happy);
-        setName("pandaAdult");
+        setName("Kuu Kitsune");
         setRegister(PANDA_ADULT_REG);
         setMinimumAffinity(MINIMUM);
     }

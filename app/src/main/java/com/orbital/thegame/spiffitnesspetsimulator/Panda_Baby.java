@@ -21,7 +21,7 @@ public class Panda_Baby extends Spirit_Baby {
     private void startConstructor(){
         setAnimation_idle(R.drawable.panda_baby_idle);
         setAnimation_happy(R.drawable.panda_baby_happy);
-        setName("pandaBaby");
+        setName("Kuu");
         setRegister(PANDA_BABY_REG);
         setMinimumAffinity(MINIMUM);
     }
