@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.orbital.thegame.spiffitnesspetsimulator">
+    package="com.orbital.thegame.spiffitnesspetsimulator">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name="android.support.multidex.MultiDexApplication"
@@ -20,66 +20,73 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme"/>
+
         <activity
             android:name=".MenuActivity"
-            android:theme="@style/ActivityTheme"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".HelpActivity"
-                  android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/ActivityTheme" />
+
+        <activity
+            android:name=".HelpActivity"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".GoogleFitSync"
-            android:exported="false"/>
+            android:exported="false" />
+
         <service
             android:name=".GameService"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true" />
 
         <receiver
             android:name=".OnBootReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
         <service
             android:name=".AlarmService"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true" />
         <service
             android:name=".WearService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.google.android.gms.wearable.DATA_CHANGED"/>
-                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED"/>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
 
                 <data
                     android:host="*"
                     android:pathPrefix="/data"
-                    android:scheme="wear"/>
+                    android:scheme="wear" />
             </intent-filter>
         </service>
 
-        <activity android:name=".connectActivity"
-                  android:theme="@style/ActivityTheme"
-                  android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".firstLaunchActivity"
-                  android:theme="@style/ActivityTheme"
-                  android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".launcherActivity"
-                  android:screenOrientation="portrait">
+        <activity
+            android:name=".connectActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ActivityTheme"/>
+
+        <activity
+            android:name=".firstLaunchActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme"/>
+
+        <activity
+            android:name=".launcherActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
