@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity{
 
     private AnimationDrawable animation_idle, animation_happy;
     private boolean happyAnimationRunning = false;
-    private boolean idleAnimationRunning = false;
 
     GoogleApiClient mGoogleWearClient;
 
@@ -69,8 +68,7 @@ public class MainActivity extends AppCompatActivity{
         levelCount.setTypeface(font);
         affinityPointCount.setTypeface(font);
 
-        levelCount.setText(""+ affinityLevel);
-        affinityPointCount.setText("" + affinityPoint);
+        setText();
 
         assert sprite != null;
         sprite.setOnClickListener(new View.OnClickListener() {
@@ -103,8 +101,7 @@ public class MainActivity extends AppCompatActivity{
                     },delay);
                 }
 
-                levelCount.setText(""+ GameService.UserSpirit.getAffinityLevel());
-                affinityPointCount.setText("" + GameService.UserSpirit.getAffinityPoint());
+                setText();
 
                 long delay = 5000;
 
@@ -190,8 +187,7 @@ public class MainActivity extends AppCompatActivity{
                                 assert levelCount != null;
                                 assert affinityPointCount != null;
 
-                                levelCount.setText(""+ affinityLevel);
-                                affinityPointCount.setText("" + affinityPoint);
+                                setText();
                             }
                         });
                     }
@@ -244,7 +240,6 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void startIdleAnimation(){
-        idleAnimationRunning = true;
         ImageButton sprite = (ImageButton) findViewById(R.id.sprite);
         assert sprite != null;
         sprite.setImageResource(GameService.UserSpirit.getAnimation_idle());
@@ -269,9 +264,26 @@ public class MainActivity extends AppCompatActivity{
 
         animation_idle = (AnimationDrawable) sprite.getDrawable();
         animation_idle.stop();
-        idleAnimationRunning = false;
     }
 
+    private void setText(){
+        affinityLevel = GameService.UserSpirit.getAffinityLevel();
+        affinityPoint = GameService.UserSpirit.getAffinityPoint();
+
+        if(affinityPoint < 0) {
+            loadSpirits();
+            setText();
+        }
+
+        final TextView levelCount = (TextView) findViewById(R.id.level_count);
+        final TextView affinityPointCount = (TextView) findViewById(R.id.experience);
+
+        assert levelCount != null;
+        assert affinityPointCount != null;
+
+        levelCount.setText(""+ affinityLevel);
+        affinityPointCount.setText(""+affinityPoint);
+    }
 
     // This portion of the code is for saving and loading of game data.
     public void saveSpirits(){

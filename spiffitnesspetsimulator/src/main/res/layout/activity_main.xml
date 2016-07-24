@@ -32,9 +32,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:textSize="18sp"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:text="0"
-                android:id="@+id/watch_affinity_point"/>
+                android:id="@+id/watch_affinity_point"
+                android:textStyle="bold" />
 
             <View
                 android:layout_width="0dp"
@@ -44,19 +45,21 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="18sp"
                 android:text="Lv"
-                android:id="@+id/watch_level_title"/>
+                android:id="@+id/watch_level_title"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="18sp"
                 android:text="0"
-                android:id="@+id/watch_level_count"/>
+                android:id="@+id/watch_level_count"
+                android:textStyle="bold" />
         </LinearLayout>
 
     </FrameLayout>
@@ -65,7 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/watch_sprite"
-        android:src="@drawable/watch_egg_idle1"
+        android:src="@drawable/egg_idle1"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_below="@+id/frameLayout"
         android:layout_centerHorizontal="true"

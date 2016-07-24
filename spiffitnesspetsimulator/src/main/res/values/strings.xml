@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SpiF: Fitness Pet Simulator</string>
+    <string name="app_name">SpiF</string>
     <string name="hello_world">Hello World!</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="hello_round">Hello Round World!</string>

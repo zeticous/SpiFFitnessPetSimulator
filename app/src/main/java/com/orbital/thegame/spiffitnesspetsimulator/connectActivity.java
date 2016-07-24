@@ -93,9 +93,8 @@ public class connectActivity extends AppCompatActivity {
     private void fitHandleConnection(){
         Log.e(TAG, "Fit connected");
         SharedPreferences settings = getSharedPreferences("GameSettings", 0);
-        if (settings.getBoolean("firstLaunch", true)) {
-            changeView();
-        }
+        settings.edit().putBoolean("firstLaunch", false).apply();
+        changeView();
     }
 
     private void changeView(){

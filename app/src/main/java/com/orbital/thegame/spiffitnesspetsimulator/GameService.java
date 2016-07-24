@@ -70,7 +70,6 @@ public class GameService extends Service {
             }
 
             register();
-            requestWearConnection();
 
             //NOTIFICATION FOR EVOLUTION
             message = "Your " + nameBefore + " has evolved to " + nameAfter + "!!";
@@ -83,9 +82,6 @@ public class GameService extends Service {
         if (UserSpirit.runCheck()) {
             String name = UserSpirit.getName();
             UserSpirit = UserSpirit.initialise();
-            saveSpirits();
-
-            requestWearConnection();
 
             //NOTIFICATION FOR RUNNING AWAY
             String message = "Your " + name + " has ran away due to neglect.";
@@ -93,7 +89,6 @@ public class GameService extends Service {
         }
 
         saveSpirits();
-
         requestWearConnection();
         return START_NOT_STICKY;
     }
