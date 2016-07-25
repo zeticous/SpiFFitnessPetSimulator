@@ -99,13 +99,14 @@ public class GameService extends Service {
     }
 
     public static final String TITLE = "SpiF";
+
     private void sendNotification(String message){
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.watch_background);
         NotificationCompat.WearableExtender wearableExtender
                 = new NotificationCompat.WearableExtender().setHintHideIcon(true).setBackground(bitmap);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.egg_idle1)
+                .setSmallIcon(R.drawable.app_icon)
                 .setContentTitle(TITLE)
                 .setContentText(message)
                 .setAutoCancel(true)
@@ -246,10 +247,12 @@ public class GameService extends Service {
         int restoredRegister = prefs.getInt("register", -99999);
         int restoredAffinityLevel = prefs.getInt("affinityLevel", -99);
         int restoredStepCount = prefs.getInt("stepCount", -99);
+        int restoredAffinityPoint = (restoredStepCount/FACTOR) - restoredAffinityLevel;
 
         PutDataMapRequest req = PutDataMapRequest.create("/data");
         req.getDataMap().putInt("register", restoredRegister);
         req.getDataMap().putInt("affinityLevel", restoredAffinityLevel);
+        req.getDataMap().putInt("affinityPoint", restoredAffinityPoint);
         req.getDataMap().putInt("stepCount", restoredStepCount);
         req.getDataMap().putLong("time", new Date().getTime());
 

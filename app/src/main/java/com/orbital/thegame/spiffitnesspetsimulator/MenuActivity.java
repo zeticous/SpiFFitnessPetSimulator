@@ -57,6 +57,11 @@ public class MenuActivity extends AppCompatActivity {
     public void onResume(){
         super.onResume();
         startIdleAnimation();
+
+        TextView expCount = (TextView) findViewById(R.id.maxExp);
+
+        String TEXT = ""+ GameService.UserSpirit.getStepCount();
+        expCount.setText(TEXT);
     }
 
     private void startIdleAnimation(){

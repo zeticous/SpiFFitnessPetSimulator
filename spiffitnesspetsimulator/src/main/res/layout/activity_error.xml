@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.wearable.view.BoxInsetLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/watch_background"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:padding="8dp">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_box="all"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/error_frameLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Please launch SpiF on your phone. Thank you."
+            android:id="@+id/error_message"
+            android:layout_gravity="center_horizontal|bottom"
+            android:textStyle="bold"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:id="@+id/error_title"
+            android:layout_gravity="center_horizontal|top"
+            android:src="@drawable/title"
+            android:adjustViewBounds="true"/>
+    </FrameLayout>
+</android.support.wearable.view.BoxInsetLayout>

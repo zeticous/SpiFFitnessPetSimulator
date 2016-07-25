@@ -1,5 +1,6 @@
 package com.orbital.thegame.spiffitnesspetsimulator;
 
+import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,7 +24,6 @@ import java.util.Date;
 
 public class MainActivity extends WearableActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
 
-    public static final int FACTOR = 200;
     public static final int EGG_REG = 10000;
 
     public static final int PIG_BABY_REG = 10001;
@@ -39,66 +39,70 @@ public class MainActivity extends WearableActivity implements GoogleApiClient.Co
     public static int affinityLevel, stepCount, register, affinityPoint;
     public int animationIdle, animationHappy;
     private AnimationDrawable animation;
+    public boolean happyAnimationRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Wearable.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
+        try{
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addApi(Wearable.API)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .build();
 
-        mGoogleApiClient.connect();
+            mGoogleApiClient.connect();
 
-        ImageView sprite = (ImageView) findViewById(R.id.watch_sprite);
-        sprite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handleOnClick();
-            }
-        });
+            ImageView sprite = (ImageView) findViewById(R.id.watch_sprite);
+            sprite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    handleOnClick();
+                }
+            });
+        } catch (NullPointerException e) {
+            Intent error = new Intent(MainActivity.this, errorActivity.class);
+            startActivity(error);
+            finish();
+        }
     }
-
-    public static void updateAffinityPoint(){
-        affinityPoint = stepCount/FACTOR - affinityLevel;
-    }
-
 
     private void handleOnClick(){
-        stopAnimation();
-        startHappyAnimation();
+        if (!happyAnimationRunning) {
+            startHappyAnimation();
+
+            long delay = 5000;
+
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    happyAnimationRunning = false;
+                    stopAnimation();
+                    startIdleAnimation();
+                }
+            },delay);
+        }
         TextView levelCount = (TextView) findViewById(R.id.watch_level_count);
         TextView pointCount = (TextView) findViewById(R.id.watch_affinity_point);
 
         if (affinityPoint > 0){
             ++affinityLevel;
-            updateAffinityPoint();
+            --affinityPoint;
         }
 
         levelCount.setText("" + affinityLevel);
         pointCount.setText("" + affinityPoint);
 
-        sendData(affinityLevel, stepCount);
-
-        long delay = 5000;
-
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                stopAnimation();
-                startIdleAnimation();
-            }
-        },delay);
+        sendData(affinityLevel, affinityPoint);
     }
 
-    private void sendData(int affinityLevel, int stepCount){
+    private void sendData(int affinityLevel, int affinityPoint){
         PutDataMapRequest req = PutDataMapRequest.create("/data");
         req.getDataMap().putInt("affinityLevel", affinityLevel);
-        req.getDataMap().putInt("stepCount", stepCount);
+        req.getDataMap().putInt("affinityPoint", affinityPoint);
         req.getDataMap().putLong("time", new Date().getTime());
 
         PutDataRequest putDataRequest = req.asPutDataRequest();
@@ -123,7 +127,6 @@ public class MainActivity extends WearableActivity implements GoogleApiClient.Co
     protected void onResume(){
         super.onResume();
         setImage(register);
-        updateAffinityPoint();
         startIdleAnimation();
 
         TextView levelCount = (TextView) findViewById(R.id.watch_level_count);
@@ -173,12 +176,14 @@ public class MainActivity extends WearableActivity implements GoogleApiClient.Co
     }
 
     private void startHappyAnimation(){
+        happyAnimationRunning = true;
         ImageView sprite = (ImageView) findViewById(R.id.watch_sprite);
         assert sprite != null;
         sprite.setImageResource(animationHappy);
 
         animation = (AnimationDrawable) sprite.getDrawable();
         animation.start();
+
     }
 
     private void stopAnimation(){

@@ -65,6 +65,6 @@ public class WearService extends WearableListenerService {
         MainActivity.affinityLevel = dataMap.getInt("affinityLevel");
         MainActivity.stepCount = dataMap.getInt("stepCount");
         MainActivity.register = dataMap.getInt("register");
-        MainActivity.updateAffinityPoint();
+        MainActivity.affinityPoint = dataMap.getInt("affinityPoint");
     }
 }

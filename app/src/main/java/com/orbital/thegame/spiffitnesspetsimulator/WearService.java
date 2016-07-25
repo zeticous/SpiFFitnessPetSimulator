@@ -64,12 +64,11 @@ public class WearService extends WearableListenerService {
 
     private void setUpData(DataMap dataMap){
         int affinityLevel = dataMap.getInt("affinityLevel");
-        int stepCount = dataMap.getInt("stepCount");
+        int affinityPoint = dataMap.getInt("affinityPoint");
 
         GameService.UserSpirit.setAffinityLevel(affinityLevel);
-        GameService.UserSpirit.setStepCount(stepCount);
+        GameService.UserSpirit.setAffinityPoint(affinityPoint);
 
-        GameService.updateAffinityPoint();
         saveSpirits();
     }
 

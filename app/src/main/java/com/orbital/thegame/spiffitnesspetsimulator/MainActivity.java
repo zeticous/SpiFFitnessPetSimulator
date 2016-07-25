@@ -1,10 +1,13 @@
 package com.orbital.thegame.spiffitnesspetsimulator;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -103,17 +106,6 @@ public class MainActivity extends AppCompatActivity{
                 }
 
                 setText();
-
-                long delay = 5000;
-
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        stopAnimation();
-                        startIdleAnimation();
-                    }
-                },delay);
             }
         });
 
@@ -140,6 +132,15 @@ public class MainActivity extends AppCompatActivity{
         startService(intent);
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = manager.getActiveNetworkInfo();
+        if (info != null && info.isConnected()) {
+            return true;
+        }
+        return false;
+    }
+
     private void requestConnection(){
         Log.d("MainActivity","STARTED: requestConnection");
         Intent service = new Intent(this, GoogleFitSync.class);
@@ -151,6 +152,13 @@ public class MainActivity extends AppCompatActivity{
     @Override
     public void onResume(){
         super.onResume();
+
+        if (!isNetworkAvailable()){
+            FragmentManager fm = getFragmentManager();
+            NoNetworkPrompt noNetworkPrompt = new NoNetworkPrompt();
+            noNetworkPrompt.setRetainInstance(true);
+            noNetworkPrompt.show(fm, "fragment_name");
+        }
 
         GameService.updateAffinityPoint();
         startIdleAnimation();
@@ -268,6 +276,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void setText(){
+        GameService.updateAffinityPoint();
         affinityLevel = GameService.UserSpirit.getAffinityLevel();
         affinityPoint = GameService.UserSpirit.getAffinityPoint();
 

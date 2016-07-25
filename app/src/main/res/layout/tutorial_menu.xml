@@ -37,9 +37,11 @@
             android:textSize="18sp"/>
 
         <ImageView
-            android:layout_margin="16dp"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:layout_marginLeft="48dp"
+            android:layout_marginRight="48dp"
             android:id="@+id/stepcount_imageView"
             android:src="@drawable/stepcount_tutorial"
             android:adjustViewBounds="true"/>

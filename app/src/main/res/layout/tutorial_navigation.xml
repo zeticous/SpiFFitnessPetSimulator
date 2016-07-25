@@ -10,6 +10,15 @@
         android:weightSum="1"
         android:layout_margin="16dp">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Basics"
+            android:textSize="30sp"
+            android:textStyle="bold"/>
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

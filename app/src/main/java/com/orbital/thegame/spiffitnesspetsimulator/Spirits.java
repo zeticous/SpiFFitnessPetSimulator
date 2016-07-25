@@ -166,7 +166,7 @@ public class Spirits {
     }
 
     public boolean check(int affinityLevel){
-        return affinityLevel > getMinimumAffinity();
+        return affinityLevel >= getMinimumAffinity();
     }
 
     public Spirits initialise(){

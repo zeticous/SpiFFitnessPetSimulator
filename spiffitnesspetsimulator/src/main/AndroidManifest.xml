@@ -3,6 +3,7 @@
           package="com.orbital.thegame.spiffitnesspetsimulator">
 
     <uses-feature android:name="android.hardware.type.watch"/>
+
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
@@ -21,6 +22,7 @@
             android:theme="@android:style/Theme.DeviceDefault.Light">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -30,15 +32,24 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
-                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
-                <data android:scheme="wear" android:host="*" android:pathPrefix="/data" />
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED"/>
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED"/>
+
+                <data
+                    android:host="*"
+                    android:pathPrefix="/data"
+                    android:scheme="wear"/>
             </intent-filter>
         </service>
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
+
+        <activity
+            android:name=".errorActivity"
+            android:label="@string/title_activity_error">
+        </activity>
     </application>
 
 </manifest>
