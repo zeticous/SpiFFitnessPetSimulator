@@ -34,7 +34,7 @@ public class GameService extends Service {
     public static Spirits UserSpirit;
     int stepCount;
     public static final int FACTOR = 200;
-    public static final String MY_PREFS_NAME = "MyPrefsFile";
+    public static final String MY_PREFS_NAME = "GameSaveFile";
 
     private final int mId = 1314520;
 

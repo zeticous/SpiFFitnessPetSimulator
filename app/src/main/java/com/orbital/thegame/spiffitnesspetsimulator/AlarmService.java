@@ -1,13 +1,16 @@
 package com.orbital.thegame.spiffitnesspetsimulator;
 
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 public class AlarmService extends Service {
@@ -15,6 +18,9 @@ public class AlarmService extends Service {
 
     public final static String ALARM_RECEIVE = "com.orbital.thegame.spiffitnesspetsimulator.gameservice.alarmreceiver";
     private IntentFilter intentFilter = new IntentFilter(ALARM_RECEIVE);
+    public static final String TITLE = "SpiF";
+    private String message = "SpiF is running.";
+    private Notification notification;
 
     AlarmReceiver alarmManager;
 
@@ -24,6 +30,14 @@ public class AlarmService extends Service {
         alarmManager = new AlarmReceiver();
         registerReceiver(alarmManager, intentFilter);
         alarmManager.setAlarm(this);
+
+       notification = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.app_icon)
+                .setContentTitle(TITLE)
+                .setContentText(message)
+                .build();
+
+        startForeground(233223, notification);
 
         return START_STICKY;
     }
