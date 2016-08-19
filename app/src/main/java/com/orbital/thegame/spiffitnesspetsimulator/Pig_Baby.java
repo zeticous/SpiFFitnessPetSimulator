@@ -22,7 +22,7 @@ public class Pig_Baby extends Spirit_Baby{
     private void startConstructor(){
         setAnimation_idle(R.drawable.pig_baby_idle);
         setAnimation_happy(R.drawable.pig_baby_happy);
-        setName("pigBaby");
+        setName("Lazu");
         setRegister(PIG_BABY_REG);
         setMinimumAffinity(MINIMUM);
     }

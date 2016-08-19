@@ -21,7 +21,7 @@ public class Penguin_Baby extends Spirit_Baby {
     private void startConstructor(){
         setAnimation_idle(R.drawable.penguin_baby_idle);
         setAnimation_happy(R.drawable.penguin_baby_happy);
-        setName("penguinBaby");
+        setName("Ica");
         setRegister(PENGUIN_BABY_REG);
         setMinimumAffinity(MINIMUM);
     }

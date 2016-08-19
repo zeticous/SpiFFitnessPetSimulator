@@ -19,7 +19,7 @@ public class Pig_Adult extends Spirit_Adult {
     private void startConstructor(){
         setAnimation_idle(R.drawable.pig_adult_idle);
         setAnimation_happy(R.drawable.pig_adult_happy);
-        setName("pigAdult");
+        setName("Lazulazu");
         setRegister(PIG_ADULT_REG);
         setMinimumAffinity(MINIMUM);
     }

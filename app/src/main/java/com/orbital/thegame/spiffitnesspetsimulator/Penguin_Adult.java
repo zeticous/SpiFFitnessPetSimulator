@@ -16,7 +16,7 @@ public class Penguin_Adult extends Spirit_Adult{
     private void startConstructor(){
         setAnimation_idle(R.drawable.penguin_adult_idle);
         setAnimation_happy(R.drawable.penguin_adult_happy);
-        setName("penguinAdult");
+        setName("Ica Wysp");
         setRegister(PENGUIN_ADULT_REG);
         setMinimumAffinity(MINIMUM);
     }
